@@ -218,7 +218,7 @@ In this exercise, we will update the code to trigger CI-CD.
 
     <img src="images/build3.png">
 
-    The build will generate and push the image to Azure Container Registry. After build completes, you will see the build summary. 
+    Build will generate and push the image to Azure Container Registry. After build completes, you will see the build summary. 
     
     <img src="images/build4.png">
 
@@ -229,7 +229,7 @@ In this exercise, we will update the code to trigger CI-CD.
     <br/>
     <img src="images/updatereg2.png">
 
-6. To see the generated images, go to your **Azure Container Registry** and navigate to **Repositories**.
+6. To see generated images, go to your **Azure Container Registry** and navigate to **Repositories**.
 
     <img src="images/imagesinrepo.png">
 
@@ -241,7 +241,7 @@ In this exercise, we will update the code to trigger CI-CD.
 
     <img src="images/rel3.png">
 
-9. After the dacpac deployment task is complete, click on **Resume or Reject**.
+9. After dacpac deployment task is complete, click on **Resume or Reject**.
 
     <img src="images/rel5.png">
 
