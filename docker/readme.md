@@ -185,7 +185,7 @@ Since the connections are not established during project provisioning, we will m
 
 5. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
-    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is required to manually map the Azure Container Registry with the Azure Web App.
+    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is used to confirm if Azure Container Registry is mapped with Azure Web App.
 
     <img src="images/updatedrd.png">
 
@@ -236,8 +236,6 @@ In this exercise, we will update the code to trigger CI-CD.
 7. Switch back to **Releases** in VSTS, and double click on recent Release. 
 
     <img src="images/rel0.png">
-
-    <img src="images/rel00.png">
 
 8. Navigate to **Logs** section to see the release in progress. It takes upto 4 to 5 minutes for dacpac deployment task to complete.
 
