@@ -25,7 +25,7 @@ Below screenshot helps you understand the VSTS DevOps workflow with Docker:
 
 ## Setting up the Environment
 
-We will create an **Azure Container Registry** to store the images generated during VSTS build. These images contain environment configuration details with build settings.  An **Azure Web App** (with Linux OS) is created where custom built images will be deployed to run inside container (single container). **Azure SQL Database** along with **SQL Server** is created as a backend to **MyHealthClinic** .NetCore sample application.
+We will create an **Azure Container Registry** (ACR) to store the images generated during VSTS build. These images contain environment configuration details with build settings.  An **Azure Web App** (with Linux OS) is created where custom built images will be deployed to run inside container (single container). **Azure SQL Database** along with **SQL Server** is created as a backend to **MyHealthClinic** .NetCore sample application.
 
 1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Web App** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as Acr name, Site Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
 
@@ -33,12 +33,13 @@ We will create an **Azure Container Registry** to store the images generated dur
    <img src="http://azuredeploy.net/deploybutton.png"/>
    </a> 
    <br/>
+      
+      Click  <a href="https://azure.microsoft.com/en-in/regions/services/"> here </a> to to see Azure products available by region.
+
+    >**Note**: Use small case letters for ***DB Server Name***.
+
    <br/>
    <img src="images/createazurecomponents.png">
-
-   Click  <a href="https://azure.microsoft.com/en-in/regions/services/"> here </a> to to see Azure products available by region.
-
-   >**Note**: Use small case letters for ***DB Server Name***.
 
 2. It takes approximately **3 to 4 minutes** to provision the environment. Click on **Go To resource group**.
 
@@ -123,7 +124,7 @@ Since the connections are not established during project provisioning, we will m
 
  Now that the connection is established, we will manually map the Azure endpoint and Azure Container Registry to build and release definitions. We will also deploy the dacpac to mhcdb database so that the schema and data is set for the backend.
  
->Note : You will encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition. This is due to a recent change in the VSTS Release Management API. While we are working on updating VSTS Demo Generator to resolve this issue, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down.
+>Note : If you encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down. This is due to a recent change in the VSTS Release Management API. We are working on updating VSTS Demo Generator to resolve this issue.
 
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **Docker**.
 
