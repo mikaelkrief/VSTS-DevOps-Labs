@@ -89,7 +89,7 @@ We will create an **Azure Container Registry** (ACR) to store the images generat
 
    <img src="images/getdbserverurl.png">
 
-5. Go back to your resource group. Click on container registry and note down the **Login server** name. We need these details later in Excercise 2.
+5. Go back to your resource group. Click on container registry and note down the **Login server** name. We need these details later in Exercise 2.
 
    <img src="images/getacrserver.png">
    
@@ -196,9 +196,9 @@ Since the connections are not established during project provisioning, we will m
     >Note: **Database Name** is set to **mhcdb**, **Server Admin Login** is **sqladmin** and **Password** is **P2ssw0rd1234**.
 
 
-## Exercise 3: Code Update
+## Exercise 3: Trigger CI-CD with Code Change
 
-In this excercise, we will update the code to trigger CI-CD. 
+In this exercise, we will update the code to trigger CI-CD. 
 
 1. Go to **Files** under **Code** tab, and navigate to the below path to **Edit** the file **Index.cshtml** 
 
@@ -218,40 +218,40 @@ In this excercise, we will update the code to trigger CI-CD.
 
     <img src="images/build3.png">
 
-5. The build will generate and push the image to Azure Container Registry. After build completes, you will see the build summary. 
+    The build will generate and push the image to Azure Container Registry. After build completes, you will see the build summary. 
     
     <img src="images/build4.png">
 
-6. Go to **Releases**, and double click on recent Release. 
-
-    <img src="images/rel0.png">
-
-    <img src="images/rel00.png">
-
-7. Navigate to **Logs** section to see the release in progress. It takes upto 4 to 5 minutes for dacpac deployment task to complete. In the meantime go to next step.
-
-    <img src="images/rel3.png">
-
-8. Go to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **App Service** which was created at the beginning of this lab. Select **Docker Container** section. Under **Image Source** highlight **Azure Container Registry**. Select your **Registry** from the dropdown. Under **image** dropdown select **myhealth.web** and under **Tag** dropdown select **latest**. This is required to map Azure Container Registry with the Web App. Click **Save**.
+5. Go to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **App Service** which was created at the beginning of this lab. Select **Docker Container** section. Under **Image Source** highlight **Azure Container Registry**. Select your **Registry** from the dropdown. Under **image** dropdown select **myhealth.web** and under **Tag** dropdown select **latest**. This is required to map Azure Container Registry with the Web App. Click **Save**.
 
     <img src="images/updatereg.png">
     <br/>
     <br/>
     <img src="images/updatereg2.png">
- 
-9. Switch back to **Releases** in VSTS. After the dacpac deployment task is complete, click on **Resume or Reject**.
+
+6. To see the generated images, go to your **Azure Container Registry** and navigate to **Repositories**.
+
+    <img src="images/imagesinrepo.png">
+
+7. Switch back to **Releases** in VSTS, and double click on recent Release. 
+
+    <img src="images/rel0.png">
+
+    <img src="images/rel00.png">
+
+8. Navigate to **Logs** section to see the release in progress. It takes upto 4 to 5 minutes for dacpac deployment task to complete.
+
+    <img src="images/rel3.png">
+
+9. After the dacpac deployment task is complete, click on **Resume or Reject**.
 
     <img src="images/rel5.png">
 
-10. If you have already mapped the Azure Container Registry with the Azure Web App, give some comment and Click **Resume**. If not, go back to step 7 and then come back to this step.
+10. If you have already mapped the Azure Container Registry with the Azure Web App, give some comment and Click **Resume**. If not, go back to step 5 and then come back to this step.
 
     <img src="images/rel6.png">
 
-    The release will deploy the image to App Service based on the **BuildID**, which is tagged with the image.
-
-    <img src="images/rel7.png">
-
-11. You will see below summary once the release is complete.
+11. The release will deploy the image to App Service based on the **BuildID**, which is tagged with the image. You will see below summary once the release is complete.
     
     <img src="images/rel8.png">
 
@@ -262,9 +262,7 @@ In this excercise, we will update the code to trigger CI-CD.
     <br/>
     <img src="images/finalresult.png">
 
-13. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
 
-    <img src="images/imagesinrepo.png">
 
 ## Summary
 
