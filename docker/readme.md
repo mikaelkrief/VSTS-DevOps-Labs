@@ -260,7 +260,12 @@ In this exercise, we will update the code to trigger CI-CD.
     <br/>
     <img src="images/finalresult.png">
 
+    Use below credentials to login to your MyHealthClinic app:
 
+    **Username**: user
+
+    **Password**: P2ssw0rd@1
+    
 
 ## Summary
 
