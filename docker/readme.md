@@ -182,7 +182,7 @@ Since the connections are not established during project provisioning, we will m
 
     **Execute Azure SQL:DacpacTask** will deploy the dacpac to mhcdb database so that the schema and data is set for the backend.
 
-5. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown. Click **Save**.
+5. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
     <img src="images/updatedrd.png">
 
@@ -199,7 +199,7 @@ Since the connections are not established during project provisioning, we will m
 
 In this excercise, we will update the code to trigger CI-CD. 
 
-1. Go to **Code** tab, and navigate to the below path to **Edit** the file- 
+1. Go to **Files** under **Code** tab, and navigate to the below path to **Edit** the file **Index.cshtml** 
 
    >Docker/src/MyHealth.Web/Views/Home/**Index.cshtml**
 
@@ -221,28 +221,28 @@ In this excercise, we will update the code to trigger CI-CD.
     
     <img src="images/build4.png">
 
-6. Go to **Releases**, and double click on recent Release. Navigate to **Logs** section to see the release in progress. 
+6. Go to **Releases**, and double click on recent Release. 
 
     <img src="images/rel0.png">
 
     <img src="images/rel00.png">
 
-    It takes upto 4 to 5 minutes for dacpac deployment task to complete. In the meantime go to next step.
+7. Navigate to **Logs** section to see the release in progress. It takes upto 4 to 5 minutes for dacpac deployment task to complete. In the meantime go to next step.
 
     <img src="images/rel3.png">
 
-7. Go to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **App Service** which was created at the beginning of this lab. Select **Docker Container** section. Under **Image Source** highlight **Azure Container Registry**. Select your **Registry** from the dropdown. Under **image** dropdown select **myhealth.web** and under **Tag** dropdown select **latest**. This is required to map Azure Container Registry with the Web App. Click **Save**.
+8. Go to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **App Service** which was created at the beginning of this lab. Select **Docker Container** section. Under **Image Source** highlight **Azure Container Registry**. Select your **Registry** from the dropdown. Under **image** dropdown select **myhealth.web** and under **Tag** dropdown select **latest**. This is required to map Azure Container Registry with the Web App. Click **Save**.
 
     <img src="images/updatereg.png">
     <br/>
     <br/>
     <img src="images/updatereg2.png">
  
-8. Switch back to **Releases** in VSTS. After the dacpac deployment task is complete, click on **Resume or Reject**.
+9. Switch back to **Releases** in VSTS. After the dacpac deployment task is complete, click on **Resume or Reject**.
 
     <img src="images/rel5.png">
 
-9. If you have already mapped the Azure Container Registry with the Azure Web App, give some comment and Click **Resume**. If not, go back to step 7 and then come back to this step.
+10. If you have already mapped the Azure Container Registry with the Azure Web App, give some comment and Click **Resume**. If not, go back to step 7 and then come back to this step.
 
     <img src="images/rel6.png">
 
@@ -250,18 +250,18 @@ In this excercise, we will update the code to trigger CI-CD.
 
     <img src="images/rel7.png">
 
-10. You will see below summary once the release is complete.
+11. You will see below summary once the release is complete.
     
     <img src="images/rel8.png">
 
-11. Switch back to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **Overview** section of your **App Service**. Click on the **URL** to see the changes in your app.
+12. Switch back to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **Overview** section of your **App Service**. Click on the **URL** to see the changes in your app.
 
     <img src="images/getwebappurl.png">
     <br/>
     <br/>
     <img src="images/finalresult.png">
 
-12. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
+13. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
 
     <img src="images/imagesinrepo.png">
 
