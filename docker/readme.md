@@ -130,7 +130,7 @@ Since the connections are not established during project provisioning, we will m
 
    <img src="images/build.png">
 
-2. Click on **Process** section, select appropriate contents from dropdown under **Azure subscription** and **Azure Container Registry**. (use up down arrow to choose Azure Container Registry for the first time). Click **Save**.
+2. In the **Process** section, update **Azure subscription** and **Azure Container Registry** with the endpoint component from the dropdown. (use arrow keys to choose Azure Container Registry for the first time). Click **Save**.
 
    <img src="images/updateprocessbd.png">
 
@@ -179,15 +179,15 @@ Since the connections are not established during project provisioning, we will m
 
 4. Under **Execute Azure SQL:DacpacTask**, update **Azure Subscription** from the dropdown. 
 
-    <img src="images/update_dbtask.png">
+    **Execute Azure SQL:DacpacTask** will deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend.
 
-    **Execute Azure SQL:DacpacTask** will deploy the dacpac to mhcdb database so that the schema and data is set for the backend.
+    <img src="images/update_dbtask.png">
 
 5. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
-    <img src="images/updatedrd.png">
+    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is required to manually map the Azure Container Registry with the Azure Web App.
 
-    **Deploy Azure App Service** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is required to manually map the Azure Container Registry with the Azure Web App.
+    <img src="images/updatedrd.png">
 
 6. Click on **Variables** section, update **ACR** and **SQLserver** with the details noted earlier while setting up the environment. Click **Save**. 
 
