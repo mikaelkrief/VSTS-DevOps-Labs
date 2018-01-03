@@ -122,14 +122,14 @@ Since the connections are not established during project provisioning, we will m
 ## Exercise 2: Configure CI-CD
 
  Now that the connection is established, we will manually map the Azure endpoint and Azure Container Registry to build and release definitions. We will also deploy the dacpac to mhcdb database so that the schema and data is set for the backend.
+ 
+>Note : You will encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition. This is due to a recent change in the VSTS Release Management API. While we are working on updating VSTS Demo Generator to resolve this issue, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down.
 
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **Docker**.
 
    <img src="images/build.png">
 
 2. Click on **Process** section, select appropriate contents from dropdown under **Azure subscription** and **Azure Container Registry**. (use up down arrow to choose Azure Container Registry for the first time). Click **Save**.
-
-     >Note : You will encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build definition. This is due to a recent change in the VSTS Release Management API. While we are working on updating VSTS Demo Generator to resolve this issue, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down.
 
    <img src="images/updateprocessbd.png">
 
@@ -221,7 +221,13 @@ In this excercise, we will update the code to trigger CI-CD.
     
     <img src="images/build4.png">
 
-6. Go to **Releases**, and double click on recent Release. Navigate to **Logs** section to see the release in progress. It takes upto 3 to 4 minutes for dacpac deployment task to complete. In the meantime go to next step.
+6. Go to **Releases**, and double click on recent Release. Navigate to **Logs** section to see the release in progress. 
+
+    <img src="images/rel0.png">
+
+    <img src="images/rel00.png">
+
+    It takes upto 4 to 5 minutes for dacpac deployment task to complete. In the meantime go to next step.
 
     <img src="images/rel3.png">
 
@@ -243,17 +249,19 @@ In this excercise, we will update the code to trigger CI-CD.
     The release will deploy the image to App Service based on the **BuildID**, which is tagged with the image.
 
     <img src="images/rel7.png">
-    <br/>
+
+10. You will see below summary once the release is complete.
+    
     <img src="images/rel8.png">
 
-10. Switch back to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **Overview** section of your **App Service**. Click on the **URL** to see the changes in your app.
+11. Switch back to <a href="https://portal.azure.com">Azure Portal</a>, navigate to the **Overview** section of your **App Service**. Click on the **URL** to see the changes in your app.
 
     <img src="images/getwebappurl.png">
     <br/>
     <br/>
     <img src="images/finalresult.png">
 
-11. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
+12. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
 
     <img src="images/imagesinrepo.png">
 
