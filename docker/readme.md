@@ -214,7 +214,7 @@ In this exercise, we will update the code to trigger CI-CD.
 
     <img src="images/commit.png">
 
-4. Go to **Builds** tab to see the CI build in-progress. Click on the build number to see the build in progress.
+4. Go to **Builds** tab. Click on the build number to see the build in progress.
 
     <img src="images/build3.png">
 
