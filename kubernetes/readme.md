@@ -1,4 +1,4 @@
-## Docker Deployment to Azure Container Service (AKS) using VSTS for ASP.NETCORE application
+## Docker Deployment to Azure Container Service (AKS) using VSTS and Azure
 
 ## Overview
 
@@ -99,7 +99,7 @@ We will create an **Azure Container Registry** to store the images generated dur
    <img src="images/akscomponents.png">
  
 
-## Setting up the Project
+## Setting up VSTS Project
 
 1.  Use <a href="https://vstsdemogenerator.azurewebsites.net/?name=AKS&templateid=77363" target="_blank">VSTS Demo Data Generator</a> to provision a project on your VSTS account 
 
@@ -363,11 +363,11 @@ In this excercise, we will enable the continuous integration trigger to create a
 
     >kubectl get service mhc-front --watch
 
-<img src="images/watchfront.png">
+    <img src="images/watchfront.png">
  
 9. Copy External-IP and paste it in your browser.
 
-<img src="images/endresult.png">
+    <img src="images/endresult.png">
 
 8. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
 
