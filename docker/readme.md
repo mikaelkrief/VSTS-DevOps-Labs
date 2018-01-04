@@ -183,6 +183,29 @@ Since the connections are not established during project provisioning, we will m
 
     <img src="images/update_dbtask.png">
 
+   <br/>
+   <br/>
+   <table width="100%">
+   <thead>
+      <tr>
+         <th width="50%"><b>Phases</b></th>
+         <th><b>Usage</b></th>
+      </tr>
+   </thead>
+   <tr>
+      <td><b>DB deployment</b></td>
+      <td>creates database schema along with pre-configured data in <b>mhcdb</b></td>
+   </tr>
+   <tr>
+      <td><b>Agentless phase</b></td>
+      <td>used to confirm if Azure Container Registry is manually mapped with Azure Web App</td>
+   </tr>
+   <tr>
+      <td><b>Agent phase</b></td>
+      <td>used to pull image from ACR and deploy in Linux Web App</td>
+   </tr>
+   </table>
+
 5. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
     **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is used to confirm if Azure Container Registry is mapped with Azure Web App.
