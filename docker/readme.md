@@ -17,7 +17,7 @@ Below screenshot helps you understand the VSTS DevOps workflow with Docker:
 
 ## Pre-requisites
 
-1.  **Microsoft Azure Account**: You need a valid and active azure account for the labs.
+1.  **Microsoft Azure Account**: You need a valid and active azure account for this lab.
 
 2. You need a **Visual Studio Team Services Account** and <a href="https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate">Personal Access Token</a>.
 
@@ -100,7 +100,7 @@ We will create an **Azure Container Registry** (ACR) to store the images generat
 
     <img src="images/VSTSDemogenerator.png">
 
-2. Select **Docker** for the template. Provide a Project Name, and click on Create Project.
+2. Provide a Project Name, and click on Create Project.
 
    <img src="images/vstsdemogen2.png">
 
@@ -177,14 +177,8 @@ Since the connections are not established during project provisioning, we will m
    <br/>
    <img src="images/release_tasks.png">
 
-4. Under **Execute Azure SQL:DacpacTask**, update **Azure Subscription** from the dropdown. 
+4. Description of three phases used in this release are given below:
 
-    **Execute Azure SQL:DacpacTask** will deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend.
-
-    <img src="images/update_dbtask.png">
-
-   <br/>
-   <br/>
    <table width="100%">
    <thead>
       <tr>
@@ -194,25 +188,31 @@ Since the connections are not established during project provisioning, we will m
    </thead>
    <tr>
       <td><b>DB deployment</b></td>
-      <td>creates database schema along with pre-configured data in <b>mhcdb</b></td>
+      <td><b>Hosted VS2017</b>  agent is used to create database schema along with pre-configured data in <b>mhcdb</b></td>
    </tr>
    <tr>
       <td><b>Agentless phase</b></td>
-      <td>used to confirm if Azure Container Registry is manually mapped with Azure Web App</td>
+      <td><b>Manual intervention</b> used to confirm if Azure Container Registry is manually mapped with Azure Web App</td>
    </tr>
    <tr>
       <td><b>Agent phase</b></td>
-      <td>used to pull image from ACR and deploy in Linux Web App</td>
+      <td><b>Hosted Linux Preview</b> agent is used to pull image from ACR and deploy in Linux Web App</td>
    </tr>
    </table>
 
-5. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
+5. Under **Execute Azure SQL:DacpacTask**, update **Azure Subscription** from the dropdown. 
+
+    **Execute Azure SQL:DacpacTask** will deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend.
+
+    <img src="images/update_dbtask.png">
+
+6. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
     **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is used to confirm if Azure Container Registry is mapped with Azure Web App.
 
     <img src="images/updatedrd.png">
 
-6. Click on **Variables** section, update **ACR** and **SQLserver** with the details noted earlier while setting up the environment. Click **Save**. 
+7. Click on **Variables** section, update **ACR** and **SQLserver** with the details noted earlier while setting up the environment. Click **Save**. 
 
     <img src="images/update_rdvariables.png">
 
@@ -256,7 +256,7 @@ In this exercise, we will update the code to trigger CI-CD.
 
     <img src="images/imagesinrepo.png">
 
-7. Switch back to **Releases** in VSTS, and double click on recent Release. 
+7. Switch back to **Releases** in VSTS, and double click on latest release. 
 
     <img src="images/rel0.png">
 
