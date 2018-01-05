@@ -25,7 +25,7 @@ Below screenshot helps you understand the VSTS DevOps workflow with Docker:
 
 4. Install <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">Azure CLI</a>.
 
-5. Install <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">KubeCtl</a>.
+5. Install <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">KubeCtl</a>, and make sure kubectl is added to <a href="https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx">PATH Environment Variable</a>.
 
 6. Have a pair of public & private <a href="https://www.ssh.com/ssh/keygen/">SSH keys</a>.
 
@@ -99,13 +99,13 @@ We will create an **Azure Container Registry** to store the images generated dur
    <img src="images/akscomponents.png">
  
 
-## Setting up VSTS Project
+## Setting up the VSTS Project
 
 1.  Use <a href="https://vstsdemogenerator.azurewebsites.net/?name=AKS&templateid=77363" target="_blank">VSTS Demo Data Generator</a> to provision a project on your VSTS account 
 
     <img src="images/vstsdemogen.png"> 
 
-2. Select **AKS** for the template. Provide a Project Name, and click on Create Project.
+2. Provide a Project Name, and click on Create Project.
 
    <img src="images/vstsdemogen2.png">
 
@@ -143,11 +143,28 @@ Since the connections are not established during project provisioning, we will m
 
  >Note : You will encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition. This is due to a recent change in the VSTS Release Management API. While we are working on updating VSTS Demo Generator to resolve this issue, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down.
 
+1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **AKS** and select **Tasks**.
+
+   <img src="images/release.png">
+   <br/>
+   <br/>
+   <img src="images/releasetasks.png">
+
+4. Update **Azure Subscription** from the dropdown. 
+
+    <img src="images/update_CD3.png">
+
+5. Click on **Variables** section, update **SQLserver** with the details noted earlier while setting up the environment. Click **Save**. 
+
+    >Note: **Database Name** is set to **mhcdb**, **Server Admin Login** is **sqladmin** and **Password** is **P2ssw0rd1234**.
+
+    <img src="images/releasevariables.png">
+
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **AKS**.
 
    <img src="images/build.png">
 
-2. Click on **Process** section, select endpoint components from the dropdown under **Azure subscription** and **Azure Container Registry** as shown. Click **Save**.
+2. Click on **Process** section, select endpoint components from the dropdown under **Azure subscription** and **Azure Container Registry** as shown. Click **Save & queue**.
 
     <img src="images/updateprocessbd.png">
 
@@ -186,74 +203,42 @@ Since the connections are not established during project provisioning, we will m
    </tr>
    </table>
 
-3. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **AKS** and select **Tasks**.
-
-   <img src="images/release.png">
-   <br/>
-   <br/>
-   <img src="images/releasetasks.png">
-
-4. Update **Azure Subscription** from the dropdown. 
-
-    <img src="images/update_CD3.png">
-
-5. Click on **Variables** section, update **SQLserver** with the details noted earlier while setting up the environment. Click **Save**. 
-
-    <img src="images/releasevariables.png">
-
-    >Note: **Database Name** is set to **mhcdb**, **Server Admin Login** is **sqladmin** and **Password** is **P2ssw0rd1234**.
-
-6. Click on **Builds** tab and then click on build definition **AKS**. 
-
-    <img src="images/selectbd.png">
-
-7. Queue a build by clicking **Queue new build**. Click on **Queue** in the pop-up window.
-
+6. Click on **Save & queue** in the pop-up window.
+    
     <img src="images/queuebuild.png">
 
-    The build will copy the dacpac to artifacts folder, which will be used in release for deploying this dacpac to database you created earlier. After this step is complete, the database schema will be deployed to SQL Database **mhcdb**.
+7. Click **Releases** and double click on latest release. Go to **logs** section to see the release summary.
+
+    The build will copy the dacpac to artifacts folder, which will be used in release for deploying this dacpac to database you created earlier. After this step is complete, the database schema along with pre-configured data will be deployed to SQL Database **mhcdb**
 
     <img src="images/dacpac_deployment.png">
 
-8. Navigate to release definition **AKS** under **Releases** tab, and click on **Edit**. Click on **Tasks** and select **Phase1**. Under **Agent queue** select **Hosted Linux Preview** .
+8. Navigate to release definition **AKS** under **Releases** tab, and click on **Edit**. Right click on task **Execute Azure SQL : DacpacTask**, and select **Disable Selected Task(s)**. 
 
-    <img src="images/selectagent.png">
+    <img src="images/disable_rdtask.png">
 
+    Right click on **Create Deployments & Services in AKS** task, and **Update image in AKS** task. Select **Enable Selected Task(s)**.
 
-9. Right click on task **Execute Azure SQL : DacpacTask**, and select **Disable Selected Task(s)**. After this, right click on **Create Deployments & Services in AKS** task, and **Update image in AKS** task. Select **Enable Selected Task(s)**.
-
-    <img src="images/enabletasks_rd.png">
+    <img src="images/enable_rdtask.png">
 
 10. Under **Create Deployments & Services in AKS** task, update **Kubernetes Service Connection**, **Azure subscription** and  **Azure Container Registry** with the endpoint components from the dropdown. Repeat the same steps for **Update image in AKS** task. Click **Save**.
 
-    <img src="images/updatedrd.png">
+    <img src="images/update_rd.png">
 
     a. **Create Deployments & Services in AKS** will create deployments and services in AKS as per configuration specified in **mhc-aks.yaml** file.
 
-    b. **Update image in AKS** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to **mhc-front pod** running in AKS. 
+    b. **Update image in AKS** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to **mhc-front pod** running in AKS.
 
 
 ## Exercise 3: Update Connection String
 
-Now that the database schema is set, we will push some data into the tables and update the connection string in MyHealthClinic .NetCore application.
+Now that the database schema and data is set, we will update the connection string in MyHealthClinic .NetCore application.
 
-1. Click on **Code** tab, and navigate to **healthclinic.sql** file. Copy entire content of this file.
-
-    <img src="images/copysql.png">   
-
-2. Switch to **Azure Portal**, and navigate to **mhcdb** SQL database which you created at the beginning of this lab. Click on **Data Explorer** and **Login**. Under authorization type **SQL server authentication** provide database **Login: sqladmin** and **Password: P2ssw0rd1234**. Click **OK**. 
-
-    <img src="images/dblogin.png">   
-
-3. Under **Query** section, paste the content copied from **healthclinic.sql** file as shown, and click on **Run**. This will now push required data into the database, so that our sample application MyHealthClinic could interact with it. Verify that message **Query succeeded** is displayed at the bottom. 
-
-    <img src="images/pastesql.png"> 
-
-4.  Scroll down and select **Connection Strings** section. Copy the contents as shown.
+1. Switch to **Azure Portal**, and navigate to **mhcdb** SQL database which you created at the beginning of this lab. Scroll down and select **Connection Strings** section. Copy the contents as shown.
 
     <img src="images/copy_connectionstring.png"> 
 
-5. Switch to your VSTS account. Go to **Code** tab, and navigate to the below path to **edit** the file **appsettings.json** 
+2. Switch to your VSTS account. Go to **Code** tab, and navigate to the below path to **edit** the file **appsettings.json** 
 
     >AKS/src/MyHealth.Web/appsettings.json
 
@@ -261,66 +246,15 @@ Now that the database schema is set, we will push some data into the tables and 
 
    <img src="images/pasteconnectionstring.png">
 
+## Exercise 4: Enable CI and Update Code to Trigger CI-CD
 
-## Exercise 4: Update Secret
-
-1. To access Azure Container Registry from AKS, you need to create a secret. From commandline, use **az login** to access your azure account 
-
-2. To connect to the Kubernetes cluster from your computer, use **kubectl**, the Kubernetes command-line client.
-
-    For installing it locally, run the following command:
-
-    >az aks install-cli
-
-**Connect with kubectl:**
-
-To configure kubectl to connect to your Kubernetes cluster, run the following command:
-
-
->az aks get-credentials --resource-group=myResourceGroup --name=myK8sCluster
-
-
-
->kubectl create secret docker-registry SECRET_NAME --docker-server=REGISTRY_NAME.azurecr.io --docker-username=USERNAME --docker-password=PASSWORD --docker-email=ANY_VALID_EMAIL
-
-
-**Create a secret called as acrconnection**
-
-Get the current configuration of the ServiceAccount
-
->kubectl get serviceaccounts default -o yaml > ./serviceaccount.yml
-
-Add below line to the end of the **serviceaccount.yml** file:
-
->imagePullSecrets: </br>
--name: acrconnection
-
-Replace the current configuration of the ServiceAccount with this new one:
->kubectl replace serviceaccount default -f ./serviceaccount.yml
-
-Now when we deploy images located in our Azure Container Registry, the images can be pulled by Kubernetes.
-
-**To access AKS through browser:**
-
->az aks browse --resource-group AKS-RG1 --name aks
-
-<img src="images/aksbrowse.png">
-
-</br>
-
-**AKS Dashboard:**
-
-<img src="images/aksdashboard.png">
-
-## Exercise 4: Enable CI and Update Code
-
-In this excercise, we will enable the continuous integration trigger to create a new build for each commit to the master branch, and update the code to trigger CI-CD. As per instructions mentioned in **mhc-aks.yml** file the required Pods and Services are created in AKS. Our application is deployed behind a loadbalancer with the Redis cache.
+In this excercise, we will enable the continuous integration trigger to create a new build for each commit to the master branch, and update the code to trigger CI-CD. As per instructions mentioned in **mhc-aks.yml** file the required Pods and Services will be created in AKS. Our application is designed to be deployed behind a loadbalancer with the Redis cache.
 
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **Docker**.
 
    <img src="images/build.png">
 
-2. Right click on each task **Run Services**, **Build Services**, **Push Services** and **Lock Services** one by one (or use Ctrl+Click to select multiple tasks, and then right click). Select **Enable Selected Task(s)** to enable all of these tasks. Disable **Copy Files** and **Publish Artifact** tasks by selecting **Disable Selected Task(s)** after right clicking on each of them.
+2. Right click on each task **Run Services**, **Build Services**, **Push Services** and **Lock Services** one by one (or use Ctrl+Click to select multiple tasks, and then right click). Select **Enable Selected Task(s)** to enable all of these tasks.
 
     <img src="images/enabletasks_bd.png">
 
@@ -330,49 +264,60 @@ In this excercise, we will enable the continuous integration trigger to create a
 
 4. Go to **Code** tab, and navigate to the below path to edit the file- 
 
-   >Docker/src/MyHealth.Web/Views/Home/**Index.cshtml**
+   >AKS/src/MyHealth.Web/Views/Home/**Index.cshtml**
 
    <img src="images/editcode.png">
 
-2. Go to line number **28**, update **JOIN US** to **JOIN US!!!**, and click **Commit**.
+5. Go to line number **28**, update **JOIN US** to **JOIN US TODAY**, and click **Commit**.
 
     <img src="images/lineedit.png">
 
-3. Go to **Builds** tab to see the CI build in progress.
+6. Go to **Builds** tab to see the CI build in progress.
 
-    <img src="images/in_progress_build.png">
+    <img src="images/buildinprog1.png">
 
-4. The build will generate and push the image to ACR. After build completes, you will see the build summary. 
+7. The build will generate and push the image to ACR. After build completes, you will see the build summary. 
     
-    <img src="images/build_summary.png">
+    <img src="images/buildsucceeded.png">
+
+8. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
+
+    <img src="images/imagesinrepo.png">
    
+9. Go to **Releases** tab, and double click on latest release. Go to **logs** to see the release summary.
 
-5. Go to **Releases** tab to see the release summary.
+    <img src="images/release_summary.png">
 
-    <img src="images/releasesummary.png">
-
-6. Go to commandline and run below command to see the pods:
+10. Once the release is complete, go to commandline and run below command to see the pods running in AKS:
 
     >kubectl get pods
 
     <img src="images/getpods.png">
 
-    <br/> 
-
-8. To get the IP address, run below command. If you see that External-IP is pending, wait for a while until an IP is assigned.
+11. To access your application, run the below command. If you see that External-IP is pending, wait for a while until an IP is assigned.
 
     >kubectl get service mhc-front --watch
 
     <img src="images/watchfront.png">
  
-9. Copy External-IP and paste it in your browser.
+12. Copy External-IP and paste in your browser.
 
-    <img src="images/endresult.png">
+    <img src="images/finalresult.png">
 
-8. To see the generated images in Azure Portal, go to **Azure Container Registry** and navigate to **Repositories**.
+    **To access AKS through browser:**
 
-    <img src="images/imagesinrepo.png">
+    >az aks browse --resource-group AKSRG --name aks
 
+    <img src="images/aksbrowse.png">
+
+    </br>
+
+    **AKS Dashboard:**
+
+    <img src="images/aksdashboard.png">
+
+
+    >Note: To execute CI-CD for next time, update release definition **AKS** by disabling **Create Deployments & Services in AKS** task, and enabling **Update image in AKS** task. This is to update the image every time build is done without disturbing the deployments and services in Kubernetes.
 
 ## Summary
 
