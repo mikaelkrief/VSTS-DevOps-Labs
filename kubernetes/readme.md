@@ -106,7 +106,7 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
 1.  Use <a href="https://vstsdemogenerator.azurewebsites.net/?name=AKS&templateid=77363" target="_blank">VSTS Demo Data Generator</a> to provision a project on your VSTS account 
 
-    <img src="images/vstsdemogenerator.png"> 
+    <img src="images/vstsdemogen.png"> 
 
 2. Provide a Project Name, and click on Create Project.
 
