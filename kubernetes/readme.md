@@ -46,12 +46,11 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
     >Add custom deployment screenshot here
    
-2. It takes approximately **3 to 4 minutes** to provision the environment. (update below pic later)
+2. It takes approximately **3 to 4 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
 
    <img src="images/depsucceeded2.png">
 
-3. Below components are created post deployment. Click on **Azure Container Registry**.
-
+3. Below components are created post deployment.
       
     <table width="100%">
      <thead>
