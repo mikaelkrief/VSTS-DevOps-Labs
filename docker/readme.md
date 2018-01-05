@@ -192,10 +192,10 @@ Since the connections are not established during project provisioning, we will m
    </tr>
    <tr>
       <td><b>Agentless phase</b></td>
-      <td><b>Manual intervention</b> used to confirm if Azure Container Registry is manually mapped with Azure Web App</td>
+      <td><b>Manual intervention</b> is used to confirm if Azure Container Registry is manually mapped with Azure Web App</td>
    </tr>
    <tr>
-      <td><b>Agent phase</b></td>
+      <td><b>Web App deployment</b></td>
       <td><b>Hosted Linux Preview</b> agent is used to pull image from ACR and deploy in Linux Web App</td>
    </tr>
    </table>
