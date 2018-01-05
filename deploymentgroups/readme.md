@@ -16,15 +16,15 @@ Deployment Group installs a deployment agent on each of the target servers withi
 
 ## Setting up the Environment
 
-Let us use ARM template to provision below resources on Azure:
+We will use ARM template to provision the below resources on Azure:
 
--  Six VMs with IIS configured
+-  Six VMs (webservers) with IIS configured
 
--  A SQL server VM and
+-  A SQL server VM (db server) and
 
 -  Azure Network Load Balancer
 
-1. Click on **Deploy to Azure** to provision these resources. It takes approximately 10-15 minutes to complete the deployment.
+1. Click on **Deploy to Azure** to provision the resources. It takes approximately 10-15 minutes to complete the deployment.
 
    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdeploymentgroups%2Fdeploymentgroups%2Fazurewebsqldeploy.json" target="_blank">
    <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -32,13 +32,13 @@ Let us use ARM template to provision below resources on Azure:
 
    <img src="images/azure.png">
 
-2. Once the deployment is successful, you will see the required resources in your Azure Portal.
+2. Once the deployment is successful, you will see the resources in your Azure Portal.
    
    <img src="images/resources.png">
 
-## Setting up VSTS Project
+## Setting up the VSTS Project
 
-1. Use <a href="">VSTS Demo Data Generator</a> to provision a project on your VSTS account.
+1. Use <a href="https://vstsdemogenerator.azurewebsites.net/?name=DeploymentGroups&templateid=77368">VSTS Demo Data Generator</a> to provision a project on your VSTS account.
 
    <img src="images/vstsdemogen.png">
 
@@ -107,14 +107,14 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
        <img src="images/agent_phase.png">
 
-    - This phase is linked to **db** tag.
-
-      <img src="images/db_tag.png">
-
    - **Database deploy phase**: In this phase, we use [**SQL Server Database Deploy**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/SqlDacpacDeploymentOnMachineGroup/README.md) task to deploy [**dacpac**](https://docs.microsoft.com/en-us/sql/relational-databases/data-tier-applications/data-tier-applications) file to the DB server.
  
     
      <img src="images/dacpac.png">
+
+    - This phase is linked to **db** tag.
+
+      <img src="images/db_tag.png">
 
    - **IIS Deployment phase**: In this phase, we deploy application to the web servers. We use following tasks- 
       
@@ -129,9 +129,9 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
      <img src="images/iis.png">
 
-3. Control the number of concurrent deployments by setting the **Maximum number of targets in parallel**. 
+3. We can control the number of concurrent deployments by setting the **Maximum number of targets in parallel**. It is also used to determine the success and failure conditions during deployment.
 
-   >In this case we have 6 web servers. Setting it to 50% will deploy to 3 servers at a time.
+   >**Note**- For example, setting the target servers to **50%** will deploy to 3 web servers out of 6
 
    <img src="images/targets.png">
  
@@ -160,15 +160,15 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
     <img src="images/connect_lb.png">
 
-6. Go to **Resource group** in Azure portal and click on DB server VM
+6. Go to resource group in [Azure Portal](www.portal.azure.com) and click on **DB server VM**.
 
    <img src="images/azure_resource.png">
 
-7. Copy DNS name 
+7. Copy the **DNS** name.
 
    <img src ="images/sql_dns.png">
 
-8. Go to **Variables** tab and update the **DefaultConnectionString** value with **Your SQL_DNS name**.
+8. Go back to VSTS and navigate to the release definition. Click on edit and go to **Variables** tab to update the **DefaultConnectionString** value with **Your SQL_DNS name**.
 
    <img src="images/release_variable.png">
 
@@ -191,12 +191,13 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
     <img src="images/web_server.png">
 
-     <img src="images/web_dns.png">
+    <br/>
 
+    <img src="images/web_dns.png">
 
 12. The deployed web application is displayed.
 
-   <img src="images/application.png">
+    <img src="images/application.png">
 
 ## Summary
 
