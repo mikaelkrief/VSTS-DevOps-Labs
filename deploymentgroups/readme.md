@@ -18,7 +18,7 @@ Deployment Group installs a deployment agent on each of the target servers withi
 
 We will use ARM template to provision the below resources on Azure:
 
--  Six VMs (webservers) with IIS configured
+-  Six VMs (web servers) with IIS configured
 
 -  A SQL server VM (db server) and
 
@@ -107,16 +107,19 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
        <img src="images/agent_phase.png">
 
-   - **Database deploy phase**: In this phase, we use [**SQL Server Database Deploy**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/SqlDacpacDeploymentOnMachineGroup/README.md) task to deploy [**dacpac**](https://docs.microsoft.com/en-us/sql/relational-databases/data-tier-applications/data-tier-applications) file to the DB server.
- 
+   - **Database deploy phase**: This deployment group phase executes tasks on the machines defined in the deployment group. This phase is linked to **db** tag.
+
+     - **Deploy Dacpac**: This task is used to deploy dacpac file to the DB server.
     
-     <img src="images/dacpac.png">
+       <img src="images/db_tag.png">
+      
+        </br>
 
-    - This phase is linked to **db** tag.
+       <img src="images/dacpac.png">
 
-      <img src="images/db_tag.png">
+   
 
-   - **IIS Deployment phase**: In this phase, we deploy application to the web servers. We use following tasks- 
+   - **IIS Deployment phase**: In this phase, we deploy application to the web servers.This phase is linked to **web** tag. We use following tasks- 
       
       - **Azure Network Load Balancer**: As the target machines are connected to NLB, this task will disconnect machines from NLB before the deployment and re-connects to NLB after the deployment.
 
@@ -125,13 +128,9 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
       - **IIS Web App Deploy**: The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. It deploys the application to the IIS server using **Web Deploy**.
 
-     This phase is linked to **web** tag.
+        <img src="images/iis.png">
 
-     <img src="images/iis.png">
-
-3. We can control the number of concurrent deployments by setting the **Maximum number of targets in parallel**. It is also used to determine the success and failure conditions during deployment.
-
-   >**Note**- For example, setting the target servers to **50%** will deploy to 3 web servers out of 6
+3. We can control the number of concurrent deployments by setting the **Maximum number of targets in parallel**. For example, for the 6 web servers, setting the target servers to **50%** will deploy to 3 web servers parallely and then to the remaining 3 servers.
 
    <img src="images/targets.png">
  
