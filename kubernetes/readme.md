@@ -119,23 +119,30 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
 ## Exercise 1: Endpoint Creation
 
-Since the connections are not established during project provisioning, we will manually create the Azure endpoint. 
+Since the connections are not established during project provisioning, we will manually create the Azure and AKS endpoints. 
 
-1. In VSTS, navigate to **Services** by clicking on the gear icon <img src="images/gearicon.png">, and click on **+ New Service Endpoint**. Select **Azure Resource Manager**. Specify **Connection name**, select your **Subscription** from the dropdown and click **OK**. We use this endpoint to connect **VSTS** and **Azure**.
+1. In VSTS, navigate to **Services** by clicking on the gear icon <img src="images/gear.png">, and click on **+ New Service Endpoint**. Select **Azure Resource Manager**. Specify **Connection name**, select your **Subscription** from the dropdown and click **OK**. We use this endpoint to connect **VSTS** and **Azure**.
 
    <img src="images/azureendpoint.png">
 
     You will be prompted to authorize this connection with Azure credentials. Disable pop-up blocker in your browser if you see a blank screen after clicking OK, and retry the step. 
 
-2. Click **+ New Service Endpoint**, and select **Kubernetes** from the list. We use this endpoint to connect **VSTS** and **Azure Container Service (AKS)**. To get Kubeconfig contents, run this command from your Azure CLI.
+2. Click **+ New Service Endpoint**, and select **Kubernetes** from the list. We use this endpoint to connect **VSTS** and **Azure Container Service (AKS)**. 
+
+    For **Server URL** enter your container service **API server address** pre-fixed with http://
+
+    To get **Kubeconfig** contents, run these commands from your Azure CLI.
     
     (I). 
     >**az login**
 
+    Authorize your login by going to below url, and enter your unique code.
     <img src="images/azlogin.png">
 
     (II).
-    >**az aks get-credentials --resource-group=yourResourceGroup --name=yourAKSname**
+    >**az aks get-credentials --resource-group yourResourceGroup --name yourAKSname**
+
+    <img src="images/getkubeconfig.png">
 
     a. Navigate to **.kube** folder under your home directory (eg: C:\Users\YOUR_HOMEDIR\ .kube)
 
@@ -147,9 +154,9 @@ Since the connections are not established during project provisioning, we will m
 
 ## Exercise 2: Configure CI-CD
 
-  Now that the connection is established, we will manually map the Azure endpoint, AKS and Azure Container Registry to build and release definitions. We will also deploy the dacpac to **mhcdb** database so that the schema is set for the backend.
+  Now that the connection is established, we will manually map the Azure endpoint, AKS and Azure Container Registry to build and release definitions. We will also deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend.
 
- >Note : You will encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition. This is due to a recent change in the VSTS Release Management API. While we are working on updating VSTS Demo Generator to resolve this issue, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down.
+ >Note : If you encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down. This is due to a recent change in the VSTS Release Management API. We are working on updating VSTS Demo Generator to resolve this issue.
 
 1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **AKS** and select **Tasks**.
 
@@ -211,7 +218,7 @@ Since the connections are not established during project provisioning, we will m
    </tr>
    </table>
 
-6. Click on **Save & queue** in the pop-up window.
+6. Click **Save & queue** in the pop-up window.
     
     <img src="images/queuebuild.png">
 
@@ -225,19 +232,19 @@ Since the connections are not established during project provisioning, we will m
 
     <img src="images/disable_rdtask.png">
 
-    Right click on **Create Deployments & Services in AKS** task, and **Update image in AKS** task. Select **Enable Selected Task(s)**.
+    Right click on **Create Deployments & Services in AKS** task and select **Enable Selected Task(s)**.
 
     <img src="images/enable_rdtask.png">
 
-9. Under **Create Deployments & Services in AKS** task, update **Kubernetes Service Connection**, **Azure subscription** and  **Azure Container Registry** with the endpoint components from the dropdown. Repeat the same steps for **Update image in AKS** task. Click **Save**.
+9. Under **Create Deployments & Services in AKS** task, update **Kubernetes Service Connection**, **Azure subscription** and  **Azure Container Registry** with the endpoint components from the dropdown. Repeat similar steps for **Update image in AKS** task. Click **Save**.
 
     <img src="images/update_rd1.png">
 
     <img src="images/update_rd2.png">
 
-    a. **Create Deployments & Services in AKS** will create deployments and services in AKS as per configuration specified in **mhc-aks.yaml** file.
+    a. **Create Deployments & Services in AKS** will create deployments and services in AKS as per configuration specified in **mhc-aks.yaml** file. Pods will pull the latest image for first time. 
 
-    b. **Update image in AKS** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to **mhc-front pod** running in AKS.
+    b. **Update image in AKS** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to **mhc-front pod** running in AKS. 
 
 
 ## Exercise 3: Update Connection String & ACR in Code
