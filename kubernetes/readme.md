@@ -39,15 +39,15 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
     <img src="http://azuredeploy.net/deploybutton.png"/>
     </a> 
-    
-    Click  <a href="https://azure.microsoft.com/en-in/regions/services/"> here </a> to to see Azure products available by region.
+
+    Click  <a href="https://azure.microsoft.com/en-in/regions/services/"> here </a> to to see Azure products available by region. (DO NOT use ***Central US*** for location as it has issues provisioning registry)
 
     **Note**: Use small case letters for ***DB Server Name***.
 
    <img src="images/customtemplate1.png">
    <img src="images/customtemplate2.png">
    
-2. It takes approximately **3 to 4 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
+2. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
 
    <img src="images/depsucceeded2.png">
 
