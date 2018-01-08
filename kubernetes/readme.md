@@ -35,16 +35,16 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
 1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Container Service (AKS)** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as Acr name, AKS Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
 
-   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdocker%2Fdocker%2Ftemplates%2Fazuredeploy.json" target="_blank">
+   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fkubernetes%2Fkubernetes%2Ftemplates%2Fazuredeploy.json" target="_blank">
 
     <img src="http://azuredeploy.net/deploybutton.png"/>
     </a> 
 
     Click  <a href="https://azure.microsoft.com/en-in/regions/services/"> here </a> to to see Azure products available by region.
 
-    >**Note**: Use small case letters for ***DB Server Name***.
+    **Note**: Use small case letters for ***DB Server Name***.
 
-    <img src="images/customtemplate.png">
+   <img src="images/customtemplate.png">
    
 2. It takes approximately **3 to 4 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
 
