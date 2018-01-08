@@ -36,6 +36,15 @@ We will use ARM template to provision the below resources on Azure:
    
    <img src="images/resources.png">
 
+
+3. Click on **DB server VM**.
+
+   <img src="images/azure_resource.png">
+
+4. Note down the **DNS** name. This value will be used later in an exercise.
+
+   <img src ="images/sql_dns.png">
+
 ## Setting up the VSTS Project
 
 1. Use <a href="https://vstsdemogenerator.azurewebsites.net/?name=DeploymentGroups&templateid=77368">VSTS Demo Data Generator</a> to provision a project on your VSTS account.
@@ -130,7 +139,7 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
         <img src="images/iis.png">
 
-3. We can control the number of concurrent deployments by setting the **Maximum number of targets in parallel**. For example, for the 6 web servers, setting the target servers to **50%** will deploy to 3 web servers parallely and then to the remaining 3 servers.
+3. We can control the number of concurrent deployments by setting the **Maximum number of targets in parallel**. For example, in this lab we have 6 web servers, setting the target servers to **50%** will deploy the build artifact to 3 web servers parallely and then to the remaining 3 servers.
 
    <img src="images/targets.png">
  
@@ -159,19 +168,12 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
     <img src="images/connect_lb.png">
 
-6. Go to resource group in [Azure Portal](www.portal.azure.com) and click on **DB server VM**.
 
-   <img src="images/azure_resource.png">
-
-7. Copy the **DNS** name.
-
-   <img src ="images/sql_dns.png">
-
-8. Go back to VSTS and navigate to the release definition. Click on edit and go to **Variables** tab to update the **DefaultConnectionString** value with **Your SQL_DNS name**.
+6. Go to **Variables** tab and click on edit  to update the **DefaultConnectionString** value with **Your SQL_DNS name**.
 
    <img src="images/release_variable.png">
 
-9. Click **Save** and **Create release**.
+7. Click **Save** and **Create release**.
 
 
    <img src="images/save.png">
@@ -181,12 +183,19 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
    <img src="images/create_release.png">
 
 
-10. Once the release is complete, you will see the deployments are done to DB and Web Servers. Go to Logs to see the summary.
+8. Once the release is complete, you will see the deployments are done to DB and Web Servers. Go to Logs to see the summary.
 
     <img src="images/release_summary.png">
 
+     <br/>
 
-11. In one of your web servers, go to **DNS** to access the application. 
+    <img src="images/release.png">
+
+
+9. In one of your web servers, go to **DNS** to access the application. 
+
+   > [**Azure Load Balancer**](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) is being used here which  distributes incoming traffic among healthy instances of services defined in a load-balanced set. So, **DNS** of all web servers are the same.   
+
 
     <img src="images/web_server.png">
 
@@ -194,7 +203,7 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
     <img src="images/web_dns.png">
 
-12. The deployed web application is displayed.
+10. The deployed web application is displayed.
 
     <img src="images/application.png">
 
