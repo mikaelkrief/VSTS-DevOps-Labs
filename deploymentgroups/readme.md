@@ -30,6 +30,7 @@ We will use ARM template to provision the below resources on Azure:
    <img src="http://azuredeploy.net/deploybutton.png"/>
    </a>
 
+   
    <img src="images/azure.png">
 
 2. Once the deployment is successful, you will see the resources in your Azure Portal.
