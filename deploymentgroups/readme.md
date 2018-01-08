@@ -46,7 +46,7 @@ We will use ARM template to provision the below resources on Azure:
 
 ## Setting up the VSTS Project
 
-1. Use <a href="https://vstsdemogenerator.azurewebsites.net/?name=DeploymentGroups&templateid=77368)VSTS Demo Data Generator</a> to provision a project on your VSTS account.
+1. Use [VSTS Demo Data Generator](https://vstsdemogenerator.azurewebsites.net/?name=DeploymentGroups&templateid=77368) to provision a project on your VSTS account.
 
    ![](images/vstsdemogen.png)
 
