@@ -26,8 +26,8 @@ We will use ARM template to provision the below resources on Azure:
 
 1. Click on **Deploy to Azure** to provision the resources. It takes approximately 10-15 minutes to complete the deployment.
 
-   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdeploymentgroups%2Fdeploymentgroups%2Fazurewebsqldeploy.json" target="_blank)
-   ![](http://azuredeploy.net/deploybutton.png"/>
+   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdeploymentgroups%2Fdeploymentgroups%2Fazurewebsqldeploy.json" target="_blank">
+   <img src="http://azuredeploy.net/deploybutton.png"/>
    </a>
 
    ![](images/azure.png)
