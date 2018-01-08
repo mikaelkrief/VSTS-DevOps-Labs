@@ -182,14 +182,12 @@ A [Phase](https://docs.microsoft.com/en-us/vsts/build-release/concepts/process/p
 
    <img src="images/create_release.png">
 
+   <img src="images/release.png">
+
 
 8. Once the release is complete, you will see the deployments are done to DB and Web Servers. Go to Logs to see the summary.
 
     <img src="images/release_summary.png">
-
-     <br/>
-
-    <img src="images/release.png">
 
 
 9. In one of your web servers, go to **DNS** to access the application. 
