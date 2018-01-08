@@ -44,7 +44,7 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
     >**Note**: Use small case letters for ***DB Server Name***.
 
-    >Add custom deployment screenshot here
+    <img src="images/customtemplate.png">
    
 2. It takes approximately **3 to 4 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
 
