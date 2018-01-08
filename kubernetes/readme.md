@@ -1,4 +1,4 @@
-## Docker Deployment to Azure Container Service (AKS) using VSTS and Azure
+## Docker Deployment to Azure Container Service (AKS) using VSTS
 
 ## Overview
 
@@ -129,7 +129,7 @@ Since the connections are not established during project provisioning, we will m
 
 2. Click **+ New Service Endpoint**, and select **Kubernetes** from the list. We use this endpoint to connect **VSTS** and **Azure Container Service (AKS)**. 
 
-    For **Server URL** enter your container service **API server address** pre-fixed with http://
+    For **Server URL** enter your container service **API server address** pre-fixed with **http://**
 
     To get **Kubeconfig** contents, run these commands from your Azure CLI.
     
@@ -319,7 +319,7 @@ In this exercise, we will enable the continuous integration trigger to create a 
 
     <img src="images/getpods.png">
 
-11. To access your application, run the below command. If you see that External-IP is pending, wait for a while until an IP is assigned.
+11. To access your application, run the below command. If you see that **External-IP** is pending, wait for a while until an IP is assigned.
 
     >**kubectl get service mhc-front --watch**
 
