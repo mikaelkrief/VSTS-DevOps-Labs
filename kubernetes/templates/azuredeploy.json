@@ -5,7 +5,7 @@
         "acrName": {
             "minLength": 5,
             "maxLength": 50,
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Name of your Azure Container Registry"
             }
@@ -17,13 +17,13 @@
                 "Standard_ZRS",
                 "Standard_GRS"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Type of the storage account that will store container registry data."
             }
         },
         "DBServerName": {
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "SQL server name will be appended to .database.windows.net"
             }
