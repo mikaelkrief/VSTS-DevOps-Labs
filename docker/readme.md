@@ -144,9 +144,9 @@ Since the connections are not established during project provisioning, we will m
 
    |Phases|Usage|
    |------|-----|
-   |DB deployment|**Hosted VS2017** agent is used to create database schema along with pre-configured data in **mhcdb**|
-   |Agentless phase| Manual intervention</b> is used to confirm if Azure Container Registry is manually mapped with Azure Web App|
-   |Web App deployment|**Hosted Linux Preview** agent is used to pull image from ACR and deploy in Linux Web App|
+   |**DB deployment**|**Hosted VS2017** agent is used to create database schema along with pre-configured data in **mhcdb**|
+   |**Agentless phase**| Manual intervention</b> is used to confirm if Azure Container Registry is manually mapped with Azure Web App|
+   |**Web App deployment**|**Hosted Linux Preview** agent is used to pull image from ACR and deploy in Linux Web App|
 
 1. Under **Execute Azure SQL:DacpacTask**, update **Azure Subscription** from the dropdown.
 
