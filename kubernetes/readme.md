@@ -136,7 +136,7 @@ Since the connections are not established during project provisioning, we will m
 
     - **az aks get-credentials --resource-group yourResourceGroup --name yourAKSname**
 
-      ![](images/getkubeconfig3.png)
+      ![](images/getkubeconfig.png)
 
     - Navigate to **.kube** folder under your home directory (eg: C:\Users\YOUR_HOMEDIR\ .kube)
 
