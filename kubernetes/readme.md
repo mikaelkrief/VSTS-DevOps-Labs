@@ -43,7 +43,6 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
    **Note**: Use small case letters for ***DB Server Name***.
 
    ![](images/customtemplate1.png)
-
    ![](images/customtemplate2.png)
 
 1. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
