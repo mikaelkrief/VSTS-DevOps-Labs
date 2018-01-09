@@ -45,11 +45,11 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
    ![](images/customtemplate1.png)
    ![](images/customtemplate2.png)
 
-2. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
+1. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
 
    ![](images/deploymentsucceeded.png)
 
-3. Below components are created post deployment.
+1. Below components are created post deployment.
 
     <table width="100%">
      <thead>
@@ -82,19 +82,19 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
    ![](images/azurecomponents.png)
 
-4. Click on **mhcdb** SQL database. Note down the **Server name**.
+1. Click on **mhcdb** SQL database. Note down the **Server name**.
 
    ![](images/getdbserverurl.png)
 
-5. Go back to your resource group. Click on container registry and note down the **Login server** name.
+1. Go back to your resource group. Click on container registry and note down the **Login server** name.
 
     ![](images/getacrserver.png)
 
-6. Switch back to your resource group. Click on your container service and note down the **API server address**. We need these details later in Exercise 2.
+1. Switch back to your resource group. Click on your container service and note down the **API server address**. We need these details later in Exercise 2.
 
    ![](images/getaksserver.png)
 
-7. To see the complete list of AKS components, click on your Resource Group list, and select the Resource Group starting with **MC_** and ending with your AKS name appended with the location.
+1. To see the complete list of AKS components, click on your Resource Group list, and select the Resource Group starting with **MC_** and ending with your AKS name appended with the location.
 
    ![](images/akscomponents.png)
 
