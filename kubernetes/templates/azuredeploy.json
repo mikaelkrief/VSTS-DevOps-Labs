@@ -28,7 +28,7 @@
                 "description": "SQL server name will be appended to .database.windows.net"
             }
         },
-        "resourceName": {
+        "aksName": {
             "type": "string",
             "metadata": {
                 "description": "The name of the Managed Cluster resource."
@@ -40,18 +40,18 @@
                 "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
             }
         },
-        "osDiskSizeGB": {
+         "osDiskSizeGB": {
             "type": "int",
-            "defaultValue": 0,
+             "defaultValue": 0,
             "metadata": {
                 "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
             },
             "minValue": 0,
             "maxValue": 1023
         },
-        "agentCount": {
+         "agentCount": {
             "type": "int",
-            "defaultValue": 3,
+            "defaultValue": 1,
             "metadata": {
                 "description": "The number of nodes for the cluster."
             },
@@ -94,22 +94,6 @@
                 "Standard_D4",
                 "Standard_D4_v2",
                 "Standard_D5_v2",
-                "Standard_DS11",
-                "Standard_DS11_v2",
-                "Standard_DS12",
-                "Standard_DS12_v2",
-                "Standard_DS13",
-                "Standard_DS13_v2",
-                "Standard_DS14",
-                "Standard_DS14_v2",
-                "Standard_DS15_v2",
-                "Standard_DS2",
-                "Standard_DS2_v2",
-                "Standard_DS3",
-                "Standard_DS3_v2",
-                "Standard_DS4",
-                "Standard_DS4_v2",
-                "Standard_DS5_v2",
                 "Standard_F16",
                 "Standard_F16s",
                 "Standard_F2",
@@ -142,15 +126,13 @@
             "metadata": {
                 "description": "Client ID (used by cloudprovider)"
             },
-            "type": "securestring",
-            "defaultValue": "n/a"
+            "type": "securestring"
         },
         "servicePrincipalClientSecret": {
             "metadata": {
                 "description": "The Service Principal Client Secret."
             },
-            "type": "securestring",
-            "defaultValue": "n/a"
+            "type": "securestring"
         },
         "osType": {
             "type": "string",
@@ -164,9 +146,8 @@
         },
         "kubernetesVersion": {
             "type": "string",
-            "defaultValue": "1.7.7",
+            "defaultValue": "1.8.1",
             "allowedValues": [
-                "1.7.7",
                 "1.8.1"
             ],
             "metadata": {
@@ -178,8 +159,7 @@
         "acrStorageName": "[concat('acr', uniqueString(resourceGroup().id))]",
         "acrStorageId": "[resourceId('Microsoft.Storage/storageAccounts', variables('acrStorageName'))]",
         "location": "[resourceGroup().location]",
-
-        "resourceName": "[parameters('resourceName')]",
+        "aksName": "[parameters('aksName')]",
         "adminUsername": "[parameters('linuxAdminUsername')]",
         "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
         "agentCount": "[parameters('agentCount')]",
@@ -190,8 +170,6 @@
         "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
         "osType": "[parameters('osType')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]"
-
-
     },
     "resources": [
         {
@@ -272,7 +250,7 @@
             "apiVersion": "2017-08-31",
             "type": "Microsoft.ContainerService/managedClusters",
             "location": "[resourceGroup().location]",
-            "name": "[variables('resourceName')]",
+            "name": "[variables('aksName')]",
             "properties": {
                 "kubernetesVersion": "[variables('kubernetesVersion')]",
                 "dnsPrefix": "[variables('dnsPrefix')]",
@@ -310,7 +288,7 @@
         },
         "controlPlaneFQDN": {
             "type": "string",
-            "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', variables('resourceName'))).fqdn]"
+            "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', variables('aksName'))).fqdn]"
         }
     }
 }
