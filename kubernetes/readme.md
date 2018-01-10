@@ -158,7 +158,7 @@ Since the connections are not established during project provisioning, we will m
 
    ![](images/releasetasks.png)
 
-1. Update **Azure Subscription** from the dropdown.
+1. Under **Execute Azure SQL: DacpacTask**, update **Azure Subscription** from the dropdown.
 
     ![](images/update_CD3.png)
 
@@ -172,7 +172,7 @@ Since the connections are not established during project provisioning, we will m
 
    ![](images/build.png)
 
-1. Click on **Process** section, select endpoint components from the dropdown under **Azure subscription** and **Azure Container Registry** as shown. Click **Save & queue**.
+1. In the **Process** section, select endpoint components from the dropdown under **Azure subscription** and **Azure Container Registry** as shown. Click **Save & queue**.
 
     ![](images/updateprocessbd.png)
 
@@ -241,9 +241,9 @@ Now that the database schema and data is set, we will update the connection stri
 
 In this exercise, we will enable the continuous integration trigger to create a new build for each commit to the master branch, and update the code to trigger CI-CD. As per instructions mentioned in **mhc-aks.yml** file the required deployments and services will be created in Kubernetes. Our application is designed to be deployed with **loadbalancer** in front end and **redis cache** in the back end.
 
-1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **Docker**.
+1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **AKS**.
 
-   ![](images/build.png)
+   ![](images/build2.png)
 
 1. Right click on each task **Run Services**, **Build Services**, **Push Services** and **Lock Services** one by one (or use Ctrl+Click to select multiple tasks, and then right click). Select **Enable Selected Task(s)** to enable all of these tasks.
 
@@ -265,6 +265,8 @@ In this exercise, we will enable the continuous integration trigger to create a 
 
 1. Go to **Builds** tab. Click on the build number to see the build in progress.
 
+    ![](images/clickbuild.png)
+
     ![](images/buildinprog1.png)
 
 1. The build will generate and push the image to ACR. After build completes, you will see the build summary.
@@ -277,7 +279,9 @@ In this exercise, we will enable the continuous integration trigger to create a 
 
 1. Switch back to VSTS. Go to **Releases** tab, and double click on latest release. Go to **logs** to see the release summary.
 
-    ![](images/release_summary.png)
+    ![](images/releaseinprog.png)
+
+    ![](images/release_summary1.png)
 
 1. Once the release is complete, go to commandline and run below command to see the pods running in AKS:
 
@@ -307,7 +311,7 @@ In this exercise, we will enable the continuous integration trigger to create a 
 
     ![](images/aksdashboard.png)
 
-    >Note: To execute CI-CD for next time, update release definition **AKS** by disabling **Create Deployments & Services in AKS** task, and enabling **Update image in AKS** task. This is to update the image every time build is done without disturbing the deployments and services in Kubernetes.
+    >**Note**: To execute CI-CD for next time, update release definition **AKS**. Disable **Create Deployments & Services in AKS** task, and enable **Update image in AKS** task. This is to update the image every time build is done without disturbing the deployments and services running in Kubernetes.
 
 ## Summary
 
