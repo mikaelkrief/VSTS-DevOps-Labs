@@ -28,8 +28,8 @@ We will create an **Azure Container Registry** (ACR) to store the images generat
 
 1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Web App** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as Acr name, Site Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
 
-   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdocker%2Fdocker%2Ftemplates%2Ftemplate.json" target="_blank)
-   ![](http://azuredeploy.net/deploybutton.png"/>
+   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdocker%2Fdocker%2Ftemplates%2Ftemplate.json" target="_blank">
+   <img src="http://azuredeploy.net/deploybutton.png">
    </a>
 
    Click [here](https://azure.microsoft.com/en-in/regions/services) to to see Azure products available by region.
