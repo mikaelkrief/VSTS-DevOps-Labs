@@ -37,7 +37,7 @@ Below screenshot helps you understand the VSTS DevOps workflow with Azure Contai
 
 ## Setting up the Environment
 
-We require below azure resources:
+We require below azure resources for this lab:
 
   <table width="100%">
     <thead>
