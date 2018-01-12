@@ -2,17 +2,24 @@
 
 ## Overview
 
-This lab shows how to build custom images of [**Dockerized ASP.NETCORE**](https://docs.docker.com/engine/examples/dotnetcore/) web application, push those images to [**Private Repository**](https://docs.docker.com/registry/) [(Azure Container Registry)](https://azure.microsoft.com/en-in/services/container-registry/), and pull these images to deploy in **Azure Container Service (AKS)** using Visual Studio Team Services.
+Container deployment makes it easy to continuously update and improve your applications. Create replicable, manageable clusters of containers by orchestrating the continuous integration and deployment of those containers using Kubernetes or DC/OS in Azure Container Service. Use Visual Studio Team Services to deploy faster and more reliably by setting up a continuous build to produce and orchestrate your container images.
+This solution is built on the Azure managed services: Azure Container Service (AKS). These services run in a high-availability environment, patched and supported, allowing you to focus on your solution instead of the environment they run in.
 
-[**Azure Container Service (AKS)**](https://azure.microsoft.com/en-us/services/container-service/) is the quickest path from zero to Kubernetes on Azure. This new service features an Azure-hosted control plane, automated upgrades, self-healing, easy scaling, and a simple user experience for both developers and cluster operators. With AKS, customers get the benefits of open source Kubernetes without complexity and operational overhead. Combination of Team Services and Azure integration with Docker will enable you to:
+[**Azure Container Service (AKS)**](https://azure.microsoft.com/en-us/services/container-service/) is the quickest path from zero to Kubernetes on Azure. This new service features an Azure-hosted control plane, automated upgrades, self-healing, easy scaling, and a simple user experience for both developers and cluster operators. With AKS, customers get the benefits of open source Kubernetes without complexity and operational overhead.
+
+This lab shows how to build custom images of ASP.NETCORE web application and deploy to **Azure Container Service (AKS)** using Visual Studio Team Services.
+
+Combination of Team Services and Azure integration with Docker will enable you to:
 
 1. [Build](https://docs.docker.com/engine/reference/commandline/build/) your own custom images using [VSTS Hosted Linux agent](https://docs.microsoft.com/en-us/vsts/build-release/concepts/agents/hosted)
 1. [Push](https://docs.docker.com/engine/reference/commandline/push/) and store images in your private repository
 1. Deploy and [run](https://docs.docker.com/engine/reference/commandline/run/) images in managed Kubernetes setup
 
-Below screenshot helps you understand the VSTS DevOps workflow with Docker:
+Below screenshot helps you understand the VSTS DevOps workflow with Azure Container Service:
 
-![](images/vstsdockerdevops.png)
+<a href="https://azure.microsoft.com/en-in/solutions/architecture/continuous-integration-deployment-containers/" target="_blank">
+
+![](images/vstsaksdevops.png) </a>
 
 ## Pre-requisites
 
@@ -26,45 +33,22 @@ Below screenshot helps you understand the VSTS DevOps workflow with Docker:
 
 1. Install [KubeCtl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), and make sure kubectl is added to [PATH Environment Variable](https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx)
 
-1. Have a pair of public & private [SSH keys](https://www.ssh.com/ssh/keygen/)
+1. Have a pair of public & private [SSH keys](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ssh-from-windows)
 
 ## Setting up the Environment
 
-We will create an **Azure Container Registry (ACR)** to store the images generated during VSTS build. These images contain environment configuration details with build settings.  An **Azure Container Service (AKS)** is created where custom built images will be deployed to run inside container. **Azure SQL Database** along with **SQL Server** is created as a backend to **MyHealthClinic** .NetCore sample application.
+We require below azure resources:
 
-1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Container Service (AKS)** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as Acr name, AKS Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
-
-   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fkubernetes%2Fkubernetes%2Ftemplates%2Fazuredeploy.json" target="_blank">
-
-   ![](http://azuredeploy.net/deploybutton.png)</a>
-
-   Click [here](https://azure.microsoft.com/en-in/regions/services/) to to see Azure products available by region. (DO NOT use ***Central US*** for location as it has issues provisioning registry)
-
-   **Note**: Use small case letters for ***DB Server Name***.
-
-   ![](images/customtemplate1.png)
-   ![](images/customtemplate2.png)
-
-1. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
-
-   ![](images/deploymentsucceeded.png)
-
-1. Below components are created post deployment.
-
-    <table width="100%">
-     <thead>
+  <table width="100%">
+    <thead>
       <tr>
-         <th width="50%"><b>Azure Components</b></th>
+         <th width="50%"><b>Azure resources</b></th>
          <th><b>Description</b></th>
       </tr>
     </thead>
     <tr>
       <td><img src="images/container_registry.png" width="30px"><b>Azure Container Registry</b></td>
       <td>Used to store images privately</td>
-    </tr>
-    <tr>
-      <td><img src="images/storage.png" width="30px"> <b>Storage Account</b></td>
-      <td>Container Registry resides in this storage account</td>
     </tr>
     <tr>
       <td><img src="images/aks.png" width="30px"> <b>AKS</b></td>
@@ -74,11 +58,24 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
       <td><img src="images/sqlserver.png" width="30px"> <b>SQL Server</b> </td>
       <td>SQL Server to host database</td>
     </tr>
-    <tr>
-      <td><img src="images/sqldb.png" width="30px"> <b>SQL database</b> </td>
-      <td>SQL database to host MyHealthClinic data</td>
-    </tr>
     </table>
+
+1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Container Service (AKS)** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as ACR name, AKS Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
+
+   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fkubernetes%2Fkubernetes%2Ftemplates%2Fazuredeploy.json" target="_blank">
+
+   ![](http://azuredeploy.net/deploybutton.png)</a>
+
+   **Note**: Use lower case for ***DB Server Name***. Click [here](https://azure.microsoft.com/en-in/regions/services/) to to see Azure products available by region.
+
+   ![](images/customtemplate1.png)
+   ![](images/customtemplate2.png)
+
+1. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
+
+   ![](images/deploymentsucceeded.png)
+
+1. Below components are created post deployment.
 
    ![](images/azurecomponents.png)
 
@@ -98,9 +95,11 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
    ![](images/akscomponents.png)
 
+   Now that required the azure components are created, let us create a VSTS project.
+
 ## Setting up the VSTS Project
 
-1. Use [VSTS Demo Data Generator](https://vstsdemogenerator.azurewebsites.net/?name=AKS&templateid=77363) to provision a project on your VSTS account
+1. Use [VSTS Demo Data Generator](https://vstsdemogenerator.azurewebsites.net/?name=AKS&templateid=77363) to provision a project on your VSTS account.
 
     ![](images/vstsdg.png)
 
@@ -114,7 +113,7 @@ We will create an **Azure Container Registry (ACR)** to store the images generat
 
 ## Exercise 1: Endpoint Creation
 
-Since the connections are not established during project provisioning, we will manually create the Azure and AKS endpoints.
+Since the connections are not established during project provisioning, let us manually create the Azure and AKS endpoints.
 
 1. In VSTS, navigate to **Services** by clicking on the gear icon ![](images/gear.png), and click on **+ New Service Endpoint**. Select **Azure Resource Manager**. Specify **Connection name**, select your **Subscription** from the dropdown and click **OK**. We use this endpoint to connect **VSTS** and **Azure**.
 
@@ -207,11 +206,12 @@ Since the connections are not established during project provisioning, we will m
 
     ![](images/update_rd1.png)
 
-    ![](images/update_rd2.png)
-
     - **Create Deployments & Services in AKS** will create deployments and services in AKS as per configuration specified in **mhc-aks.yaml** file. Pods will pull the latest image for first time.
 
     - **Update image in AKS** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to **mhc-front pod** running in AKS.
+
+    ![](images/update_rd2.png)
+
 
 ## Exercise 3: Update Connection String & ACR in Code
 
@@ -237,9 +237,11 @@ Now that the database schema and data is set, we will update the connection stri
 
     ![](images/editmhcaks.png)
 
+    This file consists details of deployments and services in Kubernetes.
+
 ## Exercise 4: Enable CI and Update Code to Trigger CI-CD
 
-In this exercise, we will enable the continuous integration trigger to create a new build for each commit to the master branch, and update the code to trigger CI-CD. As per instructions mentioned in **mhc-aks.yml** file the required deployments and services will be created in Kubernetes. Our application is designed to be deployed with **loadbalancer** in front end and **redis cache** in the back end.
+In this exercise, we will enable the continuous integration trigger to create a new build for each commit to the master branch, and update the code to trigger CI-CD. As per instructions mentioned in **mhc-aks.yml** file the required deployments and services will be created in Kubernetes. Our application is designed to be deployed with **load balancer** in front end and **Redis cache** in the back end.
 
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **AKS**.
 
@@ -259,7 +261,7 @@ In this exercise, we will enable the continuous integration trigger to create a 
 
    ![](images/editcode.png)
 
-1. Go to line number **28**, update **JOIN US** to **JOIN US TODAY**, and click **Commit**.
+1. Go to line number **28**, update **JOIN US** to **CONTACT US**, and click **Commit**.
 
     ![](images/lineedit.png)
 
@@ -289,13 +291,15 @@ In this exercise, we will enable the continuous integration trigger to create a 
 
     ![](images/getpods.png)
 
+    Our web application is running in these pods.
+
 1. To access your application, run the below command. If you see that **External-IP** is pending, wait for a while until an IP is assigned.
 
     >**kubectl get service mhc-front --watch**
 
     ![](images/watchfront.png)
 
-1. Copy **External-IP** and paste in your browser.
+1. Copy **External-IP** and paste in your browser to see the changes.
 
     ![](images/finalresult.png)
 
