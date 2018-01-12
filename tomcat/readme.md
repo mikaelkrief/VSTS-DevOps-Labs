@@ -16,7 +16,7 @@ This lab will show how you can
 
 1. You need a **Visual Studio Team Services Account** and [Personal Access Token](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate)
 
-## Exercise 1: Setting up Visual Studio Team Services
+## Exercise 1: Setting up Visual Studio Team Services project
 
 If you are following this lab from "Working with Jenkins, VSTS and Azure, you can skip this exercise. Otherwise,
 
@@ -24,7 +24,7 @@ If you are following this lab from "Working with Jenkins, VSTS and Azure, you ca
 
     ![VSTS Demo Generator](images/vstsdemogen.png)
 
-1. Use  **MyShuttle** for the template. Provide the Project Name and select **Create Propject**. After the project is provisioned, click the URL to navigate to the project.
+1. Use  **MyShuttle** for the template. Provide the Project Name and select **Create Project**. After the project is provisioned, click the URL to navigate to the project.
 
     >**Note:** This URL will automatically select Octopus template in the demo generator. If you want to try other projects, use this URL instead - https://vstsdemogenerator.azurewebsites.net/
 
@@ -32,7 +32,7 @@ If you are following this lab from "Working with Jenkins, VSTS and Azure, you ca
 
 1. We will use the **Web App + MySQL** Azure template from the Azure Marketplace to create a Website and MySQL Database together to start developing even faster.
 
-    [](https://portal.azure.com/#create/Microsoft.WebSiteMySQLDatabase)![](http://azuredeploy.net/deploybutton.png)
+    ![http://azuredeploy.net/deploybutton.png](https://portal.azure.com/#create/Microsoft.WebSiteMySQLDatabase)
 
 1. This template provides three MySQL options :
 
