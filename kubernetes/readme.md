@@ -169,7 +169,7 @@ Since the connections are not established during project provisioning, let us ma
 
 ## Exercise 2: Configure CI-CD
 
-  Now that the connection is established, we will manually map the Azure endpoint, AKS and Azure Container Registry to build and release definitions. We will also deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend. 
+  Now that the connection is established, we will manually map the Azure endpoint, AKS and Azure Container Registry to build and release definitions.
 
  >Note : If you encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down. This is due to a recent change in the VSTS Release Management API. We are working on updating VSTS Demo Generator to resolve this issue.
 
