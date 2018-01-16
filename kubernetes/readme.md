@@ -55,11 +55,11 @@ Terminologies used:
 
 1. You need to install **Kubernetes extension** extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=tsuyoshiushio.k8s-endpoint)
 
-1. Install latest [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+1. Install [Azure CLI version 2.0.23](https://azurecliprod.blob.core.windows.net/msi/azure-cli-2.0.23.msi)
 
 1. Install [KubeCtl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), and make sure kubectl is added to [PATH Environment Variable](https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx)
 
-1. Have a pair of public & private [SSH RSA keys](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ssh-from-windows)
+1. Have a pair of public & private [SSH RSA keys](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ssh-from-windows). The contents of **id_rsa.pub** is required for setting up environment.
 
 1. You need [Azure Service Principal Client ID and Client Secret](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal)
 
@@ -147,13 +147,13 @@ Since the connections are not established during project provisioning, let us ma
 
 1. Click **+ New Service Endpoint**, and select **Kubernetes** from the list. We use this endpoint to connect **VSTS** and **Azure Container Service (AKS)**.
 
-    For **Server URL** enter your container service **API server address** pre-fixed with **http://**
+    For **Server URL**, enter your container service **API server address** pre-fixed with **http://**
 
     To get **Kubeconfig** contents, run these commands from your Azure CLI.
 
     - **az login**
 
-      Authorize your login by going to below url, and enter your unique code.
+      Authorize your login by going to below url, and enter the provided unique code.
 
       ![](images/azlogin.png)
 
@@ -225,7 +225,9 @@ We will update the connection string in .NET Core application, and update ACR in
 
    >AKS/src/MyHealth.Web/**appsettings.json**
 
-    Go to line number **9**. Paste the database server name as shown and manually update the **User ID** to **sqladmin** and **Password** to **P2ssw0rd1234**. Click **Commit**.
+    Go to line number **9**. Provide the database server name as given in the step 6 of the previous exercise and manually update the **User ID** to **sqladmin** and **Password** to **P2ssw0rd1234**. Click **Commit**.
+    
+    > "DefaultConnection": "Server=YOUR_SQLSERVER_NAME.database.windows.net,1433;Database=mhcdb;Persist Security Info=False;User ID=sqladmin;Password=P2ssw0rd1234"
 
    ![](images/pasteconnectionstring.png)
 
@@ -302,7 +304,7 @@ In this exercise, we will enable the continuous integration to trigger a build f
 
     **To access AKS through browser:**
 
-    >**az aks browse --resource-group=yourResourceGroup --name=yourAKSname**
+    >**az aks browse --resource-group yourResourceGroup --name yourAKSname**
 
     ![](images/aksbrowse.png)
 
@@ -312,7 +314,6 @@ In this exercise, we will enable the continuous integration to trigger a build f
 
     ![](images/aksdashboard.png)
 
-    >**Note**: To execute CI-CD for next time, update release definition **AKS**. Disable **Create Deployments & Services in AKS** task, and enable **Update image in AKS** task. This is to update the image every time build is done without disturbing the deployments and services running in Kubernetes.
 
 ## Summary
 
