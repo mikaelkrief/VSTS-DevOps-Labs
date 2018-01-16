@@ -177,7 +177,7 @@ Since the connections are not established during project provisioning, let us ma
 
    ![](images/build.png)
 
-1. In the **Process** section, select endpoint components from the dropdown under **Azure subscription** and **Azure Container Registry** as shown. Click **Save & queue**.
+1. In the **Process** section, select endpoint components from the dropdown under **Azure subscription** and **Azure Container Registry** as shown. Click **Save**.
 
     ![](images/updateprocessbd.png)
 
