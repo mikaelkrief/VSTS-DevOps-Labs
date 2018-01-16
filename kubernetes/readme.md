@@ -1,25 +1,51 @@
-# Docker Deployment to Azure Container Service (AKS) using VSTS
+# Docker Deployment to Kubernetes (AKS) using VSTS
 
 ## Overview
 
 Container deployment makes it easy to continuously update and improve your applications. Create replicable, manageable clusters of containers by orchestrating the continuous integration and deployment of those containers using Kubernetes or DC/OS in Azure Container Service. Use Visual Studio Team Services to deploy faster and more reliably by setting up a continuous build to produce and orchestrate your container images.
-This solution is built on the Azure managed services: Azure Container Service (AKS). These services run in a high-availability environment, patched and supported, allowing you to focus on your solution instead of the environment they run in.
 
 [**Azure Container Service (AKS)**](https://azure.microsoft.com/en-us/services/container-service/) is the quickest path from zero to Kubernetes on Azure. This new service features an Azure-hosted control plane, automated upgrades, self-healing, easy scaling, and a simple user experience for both developers and cluster operators. With AKS, customers get the benefits of open source Kubernetes without complexity and operational overhead.
 
-This lab shows how to build custom images of ASP.NETCORE web application and deploy to **Azure Container Service (AKS)** using Visual Studio Team Services.
+This lab shows how to build custom images of ASP.NETCORE web application and deploy to **Azure Container Service (AKS)** using Visual Studio Team Services. These services run in a high-availability environment, patched and supported, allowing you to focus on your solution instead of the environment they run in.
 
-Combination of Team Services and Azure integration with Docker will enable you to:
+Combination of Team Services and Azure will enable you to:
 
 1. [Build](https://docs.docker.com/engine/reference/commandline/build/) your own custom images using [VSTS Hosted Linux agent](https://docs.microsoft.com/en-us/vsts/build-release/concepts/agents/hosted)
 1. [Push](https://docs.docker.com/engine/reference/commandline/push/) and store images in your private repository
-1. Deploy and [run](https://docs.docker.com/engine/reference/commandline/run/) images in managed Kubernetes setup
+1. Deploy and [run](https://docs.docker.com/engine/reference/commandline/run/) images in managed Kubernetes AKS setup
 
-Below screenshot helps you understand the VSTS DevOps workflow with Azure Container Service:
+In this lab you will:
+
+- Create an Azure Container Registry (ACR), AKS and Azure SQL server
+- Create VSTS project with .NET Core application 
+- Configure endpoints in VSTS to access Azure and AKS
+- Database deployment and configure CD in VSTS
+- Update connection string & ACR in code
+- Enable CI and Update Code to Trigger CI-CD
+
+Below screenshot helps you understand the VSTS DevOps workflow with Azure Container Service with AKS:
 
 <a href="https://azure.microsoft.com/en-in/solutions/architecture/continuous-integration-deployment-containers/" target="_blank">
 
 ![](images/vstsaksdevops.png) </a>
+
+
+- User commits changes to VSTS Git repository where the application code is hosted
+- VSTS will build Docker image **myhealth.web** and push the image to Azure Container Registry tagged with buildID. VSTS will publish the Kubernetes [deployment YAML file](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) as a build artifact
+- VSTS release will execute this YAML in the Kubernetes cluster where two deployments and services called **mhc-front** and **mhc-back** are created. **mhc-front** is the application hosted behind a load balancer while **mhc-back** is the [Redis](https://redis.io/) cache
+- Kubernetes cluster will then pull **myhealth.web** image from Azure Container Registry into [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/) and execute the rest of the deployment file instructions (create public endpoints etc.)
+- You will be able to access the application via a browser after successful deployment
+
+Terminologies used:
+
+[**Pods**](https://kubernetes.io/docs/concepts/workloads/pods/pod/): A Pod is the basic building block of Kubernetes–the smallest and simplest unit in the Kubernetes object model that you create or deploy. A Pod represents a running process on your cluster.
+
+[**Services**](https://kubernetes.io/docs/concepts/services-networking/service/): A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them - sometimes called a micro-service.
+
+[**Deployments**](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/): A Deployment controller provides declarative updates for Pods
+
+[**Kubernetes Manifest file**](https://kubernetes.io/docs/reference/kubectl/cheatsheet/): Kubernetes manifests with deployments, services and pods can be defined in json or yaml. The file extension .yaml, .yml, and .json can be used.
+
 
 ## Pre-requisites
 
@@ -33,7 +59,9 @@ Below screenshot helps you understand the VSTS DevOps workflow with Azure Contai
 
 1. Install [KubeCtl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), and make sure kubectl is added to [PATH Environment Variable](https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx)
 
-1. Have a pair of public & private [SSH keys](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ssh-from-windows)
+1. Have a pair of public & private [SSH RSA keys](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ssh-from-windows)
+
+1. You need [Azure Service Principal Client ID and Client Secret](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal)
 
 ## Setting up the Environment
 
@@ -60,7 +88,7 @@ We require below azure resources for this lab:
     </tr>
     </table>
 
-1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Container Service (AKS)** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as ACR name, AKS Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
+1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Container Service (AKS)** and **Azure SQL Server**. Enter required details and agree to ***Terms and Conditions***, and click **Purchase**.
 
    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fkubernetes%2Fkubernetes%2Ftemplates%2Fazuredeploy.json" target="_blank">
 
@@ -71,11 +99,11 @@ We require below azure resources for this lab:
    ![](images/customtemplate1.png)
    ![](images/customtemplate2.png)
 
-1. It takes approximately **4 to 5 minutes** to provision the environment. Click on **Go To resource group**. (update below pic)
+1. It takes approximately 5 minutes to provision the environment. Click on **Go to resource group**.
 
    ![](images/deploymentsucceeded.png)
 
-1. Below components are created post deployment.
+1. Below components are created after deployment.
 
    ![](images/azurecomponents.png)
 
@@ -83,17 +111,13 @@ We require below azure resources for this lab:
 
    ![](images/getdbserverurl.png)
 
-1. Go back to your resource group. Click on container registry and note down the **Login server** name.
+1. Go back to the resource group, click on container registry and note down the **Login server** name.
 
     ![](images/getacrserver.png)
 
-1. Switch back to your resource group. Click on your container service and note down the **API server address**. We need these details later in Exercise 2.
+1. Switch back to the resource group. Click on your container service and note down the **API server address**. We need these details later in Exercise 2.
 
    ![](images/getaksserver.png)
-
-1. To see the complete list of AKS components, click on your Resource Group list, and select the Resource Group starting with **MC_** and ending with your AKS name appended with the location.
-
-   ![](images/akscomponents.png)
 
    Now that required the azure components are created, let us create a VSTS project.
 
@@ -113,7 +137,7 @@ We require below azure resources for this lab:
 
 ## Exercise 1: Endpoint Creation
 
-Since the connections are not established during project provisioning, let us manually create the Azure and AKS endpoints.
+Since the connections are not established during project provisioning, let us manually create the Azure and Kubernetes endpoints.
 
 1. In VSTS, navigate to **Services** by clicking on the gear icon ![](images/gear.png), and click on **+ New Service Endpoint**. Select **Azure Resource Manager**. Specify **Connection name**, select your **Subscription** from the dropdown and click **OK**. We use this endpoint to connect **VSTS** and **Azure**.
 
@@ -139,33 +163,15 @@ Since the connections are not established during project provisioning, let us ma
 
     - Navigate to **.kube** folder under your home directory (eg: C:\Users\YOUR_HOMEDIR\ .kube)
 
-    - Copy contents from configuration file called **config** and paste it in the Kubernetes Connection endpoint pop-up window.
-
-    - Click **OK**.
+    - Copy contents from configuration file called **config** and paste it in the Kubernetes Connection window. Click **OK**.
 
       ![](images/aksendpoint.png)
 
 ## Exercise 2: Configure CI-CD
 
-  Now that the connection is established, we will manually map the Azure endpoint, AKS and Azure Container Registry to build and release definitions. We will also deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend.
+  Now that the connection is established, we will manually map the Azure endpoint, AKS and Azure Container Registry to build and release definitions. We will also deploy the dacpac to **mhcdb** database so that the schema and data is set for the backend. 
 
  >Note : If you encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down. This is due to a recent change in the VSTS Release Management API. We are working on updating VSTS Demo Generator to resolve this issue.
-
-1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **AKS** and select **Tasks**.
-
-   ![](images/release.png)
-
-   ![](images/releasetasks.png)
-
-1. Under **Execute Azure SQL: DacpacTask**, update **Azure Subscription** from the dropdown.
-
-    ![](images/update_CD3.png)
-
-1. Click on **Variables** section, update **ACR** and **SQLserver** with the details noted earlier while setting up the environment. Click **Save**.
-
-   >Note: **Database Name** is set to **mhcdb**, **Server Admin Login** is **sqladmin** and **Password** is **P2ssw0rd1234**.
-
-   ![](images/releasevariables.png)
 
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **AKS**.
 
@@ -184,52 +190,46 @@ Since the connections are not established during project provisioning, let us ma
     |![](images/copy-files.png) **Copy Files**| used to copy files from source to destination folder using match patterns|
     |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| used to share the build artifacts|
 
-1. Click **Save & queue** in the pop-up window.
 
-    ![](images/queuebuild.png)
+1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **AKS** and select **Tasks**.
 
-1. Click **Releases** and double click on latest release. Go to **logs** section to see the release summary.
+   ![](images/release.png)
 
-    The build will copy the dacpac to artifacts folder, which will be used in release for deploying this dacpac to database you created earlier. After this step is complete, the database schema along with pre-configured data will be deployed to SQL Database **mhcdb**
+   ![](images/releasetasks.png)
 
-    ![](images/dacpac_deployment.png)
+1. Under **Execute Azure SQL: DacpacTask**, update **Azure Subscription** from the dropdown.
 
-1. Navigate to release definition **AKS** under **Releases** tab, and click on **Edit**. Right click on task **Execute Azure SQL : DacpacTask**, and select **Disable Selected Task(s)**.
+    ![](images/update_CD3.png)
 
-    ![](images/disable_rdtask.png)
-
-    Right click on **Create Deployments & Services in AKS** task and select **Enable Selected Task(s)**.
-
-    ![](images/enable_rdtask.png)
-
-1. Under **Create Deployments & Services in AKS** task, update **Kubernetes Service Connection**, **Azure subscription** and  **Azure Container Registry** with the endpoint components from the dropdown. Repeat similar steps for **Update image in AKS** task. Click **Save**.
+1. Under **Create Deployments & Services in AKS** task, update **Kubernetes Service Connection**, **Azure subscription** and  **Azure Container Registry** with the endpoint components from the dropdown. Repeat similar steps for **Update image in AKS** task.
 
     ![](images/update_rd1.png)
+
+    ![](images/update_rd2.png)
 
     - **Create Deployments & Services in AKS** will create deployments and services in AKS as per configuration specified in **mhc-aks.yaml** file. Pods will pull the latest image for first time.
 
     - **Update image in AKS** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to **mhc-front pod** running in AKS.
 
-    ![](images/update_rd2.png)
+1. Click on **Variables** section, update **ACR** and **SQL server** with the details noted earlier while setting up the environment. Click **Save**.
 
+   >Note: **Database Name** is set to **mhcdb**, **Server Admin Login** is **sqladmin** and **Password** is **P2ssw0rd1234**.
+
+   ![](images/releasevariables.png)
 
 ## Exercise 3: Update Connection String & ACR in Code
 
-Now that the database schema and data is set, we will update the connection string in MyHealthClinic .NetCore application.
+We will update the connection string in .NET Core application, and update ACR in manifest YAML file.
 
-1. Switch to **Azure Portal**, and navigate to **mhcdb** SQL database which you created at the beginning of this lab. Scroll down and select **Connection Strings** section. Copy the contents as shown.
-
-    ![](images/copy_connectionstring.png)
-
-1. Switch to your VSTS account. Go to **Code** tab, and navigate to the below path to **edit** the file **appsettings.json**
+1. Go to **Code** tab, and navigate to the below path to **edit** the file **appsettings.json**
 
    >AKS/src/MyHealth.Web/**appsettings.json**
 
-    Go to line number **9**. Paste the connection string as shown and manually update the **User ID** to **sqladmin** and **Password** to **P2ssw0rd1234**. Click **Commit**.
+    Go to line number **9**. Paste the database server name as shown and manually update the **User ID** to **sqladmin** and **Password** to **P2ssw0rd1234**. Click **Commit**.
 
    ![](images/pasteconnectionstring.png)
 
-1. Navigate to the below path to **edit** the file **mhc-aks.yaml**. This file contains configuration details of **deployments** and **services** which will be deployed in Kubernetes.
+1. Navigate to the below path to **edit** the file **mhc-aks.yaml**.
 
     >AKS/**mhc-aks.yaml**
 
@@ -237,19 +237,16 @@ Now that the database schema and data is set, we will update the connection stri
 
     ![](images/editmhcaks.png)
 
-    This file consists details of deployments and services in Kubernetes.
+     This YAML manifest file contains configuration details of **deployments**, **services** and **pods** which will be deployed in Kubernetes.
+
 
 ## Exercise 4: Enable CI and Update Code to Trigger CI-CD
 
-In this exercise, we will enable the continuous integration trigger to create a new build for each commit to the master branch, and update the code to trigger CI-CD. As per instructions mentioned in **mhc-aks.yml** file the required deployments and services will be created in Kubernetes. Our application is designed to be deployed with **load balancer** in front end and **Redis cache** in the back end.
+In this exercise, we will enable the continuous integration to trigger a build for each commit to the master branch, and update the code to trigger CI-CD. Our application is designed to be deployed in the pod with **load balancer** in front-end and **Redis cache** in the back-end.
 
 1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **AKS**.
 
    ![](images/build2.png)
-
-1. Right click on each task **Run Services**, **Build Services**, **Push Services** and **Lock Services** one by one (or use Ctrl+Click to select multiple tasks, and then right click). Select **Enable Selected Task(s)** to enable all of these tasks.
-
-    ![](images/enabletasks_bd.png)
 
 1. Click on **Triggers** section. Check the option to **Enable continuous integration**. Click **Save**.
 
