@@ -2,34 +2,42 @@
 
 ## Overview
 
-[**Azure Container Service (AKS)**](https://azure.microsoft.com/en-us/services/container-service/) is the quickest path from zero to Kubernetes on Azure. This new service features an Azure-hosted control plane, automated upgrades, self-healing, easy scaling, and a simple user experience for both developers and cluster operators. With AKS, customers get the benefits of open source Kubernetes without complexity and operational overhead. Use Visual Studio Team Services to deploy faster and more reliably by setting up a continuous build to produce and orchestrate your container images.
-
-
 This lab shows how to build custom images of ASP.NETCORE web application and deploy to **Azure Container Service (AKS)** using Visual Studio Team Services. These services run in a high-availability environment, patched and supported, allowing you to focus on your solution instead of the environment they run in.
 
-In this lab you will:
+[**Azure Container Service (AKS)**](https://azure.microsoft.com/en-us/services/container-service/) is the quickest way to use Kubernetes on Azure. This new service provides an Azure-hosted control plane, automated upgrades, self-healing, easy scaling, and a simple user experience for both developers and cluster operators. With AKS, customers get the benefits of open source Kubernetes without the complexity and operational overhead. Using Visual Studio Team Services helps create your application container images for faster deployments reliably by setting up a continuous build.
+
+In this lab you will perform the following:
 
 - Create an Azure Container Registry (ACR), AKS and Azure SQL server
-- Provision VSTS project with .NET Core application 
+- Provision VSTS Team Project with .NET Core application using [VSTS Demo Generator](https://vstsdemogenerator.azurewebsites.net/) tool
 - Configure endpoints in VSTS to access Azure and AKS
-- Database deployment and configure CD in VSTS
-- Update connection string & ACR in code
-- Trigger Build and Release to view the deployed application
+- Database deployment and configure Continuous Deployment (CD) in VSTS
+- Modify connection string & ACR configuration in the source code
+- Initiate the build to automatically deploy the application
 
-Below screenshot helps you understand the VSTS DevOps workflow with Azure Container Service with AKS:
+The below diagram details the VSTS DevOps workflow with Azure Container Service with AKS:
 
 <a href="https://azure.microsoft.com/en-in/solutions/architecture/continuous-integration-deployment-containers/" target="_blank">
 
 ![](images/vstsaksdevops.png) </a>
 
+- Firstly the source code changes are committed to the VSTS git repository
+- VSTS will build the Docker image **myhealth.web** and push the image tagged with the build ID to the ACR. Subsequently it will publish the [Kubernetes deployment YAML file](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) as a build artifact
+- VSTS will deploy **mhc-front** and **mhc-back** services into  the Kubernetes cluster using the YAML file. **mhc-front** is the application hosted on a load balancer whereas **mhc-back** is the [Redis](https://redis.io/) cache
+- The Kubernetes cluster will then pull the **myhealth.web** image from the ACR into the [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/) and complete the rest of the deployment file instructions
+- The myhealth.web application will be accessible through a browser once the deployment is successfully completed
 
-- We will commit changes to VSTS Git repository
-- VSTS will build Docker image [**myhealth.web**] and push the image to Azure Container Registry tagged with buildID. VSTS will publish the Kubernetes [deployment YAML file](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) as a build artifact
-- VSTS release will execute this YAML in the Kubernetes cluster where two deployments and services called **mhc-front** and **mhc-back** are created. **mhc-front** is the application hosted behind a load balancer while **mhc-back** is the [Redis](https://redis.io/) cache
-- Kubernetes cluster will then pull **myhealth.web** image from Azure Container Registry into [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/) and execute the rest of the deployment file instructions (create public endpoints etc.)
-- You will be able to access the application via a browser after successful deployment
+Below are the descriptions for the terminologies used in the lab document to help you get started:
 
-If you are a newbie to Kubernetes, then the below basic terminologies should help you get started with this lab-
+[**Kubernetes**](): 
+
+[**Cluster**](): 
+
+[**Images**](): 
+
+[**Docker**](): 
+
+[**Containers**](): 
 
 [**Pods**](https://kubernetes.io/docs/concepts/workloads/pods/pod/): A Pod is the basic building block of Kubernetes–the smallest and simplest unit in the Kubernetes object model that you create or deploy. A Pod represents a running process on your cluster.
 
@@ -39,14 +47,19 @@ If you are a newbie to Kubernetes, then the below basic terminologies should hel
 
 [**Kubernetes Manifest file**](https://kubernetes.io/docs/reference/kubectl/cheatsheet/): Kubernetes manifests with deployments, services and pods can be defined in json or yaml. The file extension .yaml, .yml, and .json can be used.
 
-
-## Prerequisites for a Windows machine
+## Prerequisites
 
 1. **Microsoft Azure Account**: You need a valid and active azure account for the labs.
 
-1. You need a **Visual Studio Team Services Account** and [Personal Access Token](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate)
+1. Spin up a [Windows virtual machine on Azure](https://portal.azure.com/#create/Microsoft.WindowsServer2016Datacenter-ARM).
+
+1. **Visual Studio Team Services Account**: If you don’t have one, you can create from [here](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate)
+
+1. You will need [Personal Access Token](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate) for VSTS
 
 1. You need to install **Kubernetes extension** from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=tsuyoshiushio.k8s-endpoint)  to your VSTS account
+
+Follow the below steps for configuration using Windows Azure virtual machine (VM).
 
 1. Install [Azure CLI version 2.0.23](https://azurecliprod.blob.core.windows.net/msi/azure-cli-2.0.23.msi)
 
