@@ -120,7 +120,7 @@ Since the connections are not established during project provisioning, we will m
 
 >Note : If you encounter an error - ***TFS.WebApi.Exception: Page not found*** for Azure tasks in the build/ release definition, you can fix this by typing a random text in the Azure Subscription field and click the **Refresh** icon next to it. Once the field is refreshed, you can select the endpoint from the drop down. This is due to a recent change in the VSTS Release Management API. We are working on updating VSTS Demo Generator to resolve this issue.
 
-1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **Docker**.
+1. Go to **Builds** under **Build and Release** tab, **Edit** the build definition **MHCDocker.build**
 
    ![](images/build.png)
 
@@ -135,7 +135,7 @@ Since the connections are not established during project provisioning, we will m
    |![](images/icon.png) **Push services**| pushes **myhealth.web** image tagged with **$(Build.BuildId)** to container registry|
       |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| used to share dacpac for database deployment through VSTS artifacts  |
 
-1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **Docker** and select **Tasks**.
+1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **MHCDocker.release** and select **Tasks**.
 
    ![](images/release.png)
 
@@ -145,8 +145,8 @@ Since the connections are not established during project provisioning, we will m
 
    |Phases|Usage|
    |------|-----|
-   |**DB deployment**|**Hosted VS2017** agent is used to create database schema along with pre-configured data in **mhcdb**|
-   |**Web App deployment**|**Hosted Linux Preview** agent is used to pull image from ACR and deploy in Linux Web App|
+   |**DB deployment**|**Hosted VS2017** agent is used to create database|
+   |**Web App deployment**|**Hosted Linux Preview** agent is used to deploy application to Linux Web App|
 
 1. Under **Execute Azure SQL:DacpacTask**, update **Azure Subscription** from the dropdown.
 
@@ -156,7 +156,7 @@ Since the connections are not established during project provisioning, we will m
 
 1. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
-    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. 
+    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service.
 
     ![](images/updatedrd.png)
 
