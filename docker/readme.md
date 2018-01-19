@@ -176,7 +176,7 @@ In this exercise, we will update the code to trigger CI-CD.
 
    ![](images/editcode.png)
 
-1. Go to line number **28**, update **JOIN US** to **JOIN US TODAY**, and click **Commit**.
+1. Go to line number **28**, update **JOIN US** to **CONTACT US**, and click **Commit**.
 
     ![](images/lineedit.png)
 
@@ -198,7 +198,7 @@ In this exercise, we will update the code to trigger CI-CD.
 
     ![](images/updatereg2.png)
 
-    We could configure Continuous Deployment to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a VSTS CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment
+    We could configure Continuous Deployment to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a VSTS CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment.
 
 1. To see generated images, go to your **Azure Container Registry** and navigate to **Repositories**.
 
