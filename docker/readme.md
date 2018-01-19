@@ -204,21 +204,9 @@ In this exercise, we will update the code to trigger CI-CD.
 
     ![](images/imagesinrepo.png)
 
-1. Switch back to **Releases** in VSTS, and double click on latest release.
-
-    ![](images/rel0.png)
-
-1. Navigate to **Logs** section to see the release in progress. It takes upto 4 to 5 minutes for dacpac deployment task to complete.
+1. Switch back to **Releases** in VSTS, and double click on latest release. Navigate to **Logs** section to see the release in progress.
 
     ![](images/rel3.png)
-
-1. After dacpac deployment task is complete, click on **Resume or Reject**.
-
-    ![](images/rel5.png)
-
-1. If you have already mapped the Azure Container Registry with the Azure Web App, give some comment and Click **Resume**. If not, go back to step 5 and then come back to this step.
-
-    ![](images/rel6.png)
 
 1. The release will deploy the image to App Service based on the **BuildID**, which is tagged with the image. You will see below summary once the release is complete.
 
