@@ -1,38 +1,41 @@
-# Docker Deployment to Azure Web App (Linux) using VSTS
+# Docker Deployment to Azure App Service (Linux) using VSTS
 
 ## Overview
 
-This lab shows how to build custom images of [**Dockerized ASP.NETCORE**](https://docs.docker.com/engine/examples/dotnetcore/") application, push those images to [**Private Repository**](https://docs.docker.com/registry/)  [(Azure Container Registry)](https://azure.microsoft.com/en-in/services/container-registry/), and pull these images to deploy to containers in **Azure Web App** (Linux) using Visual Studio Team Services.
+This lab shows how to build custom Docker images of an [**ASP.NET Core**](https://docs.docker.com/engine/examples/dotnetcore/") application, push those images to a private repository in [Azure Container Registry](https://azure.microsoft.com/en-in/services/container-registry/) (ACR). These images will be used to deploy the application to the Docker containers in the **Azure App Service** (Linux) using VSTS.
 
-Web App for containers lets you bring your own [Docker](https://www.docker.com/what-docker) formatted container images, easily deploy and run them at scale with Azure. Combination of Team Services and Azure integration with Docker will enable you to:
+Web App for Containers lets you bring your own [Docker](https://www.docker.com/what-docker) formatted container images, easily deploy and run them at scale on Azure. Combination of VSTS and Azure integration with Docker will enable you to:
 
-1. [Build](https://docs.docker.com/engine/reference/commandline/build/) your own custom images using [VSTS Hosted Linux agent](https://docs.microsoft.com/en-us/vsts/build-release/concepts/agents/hosted)
-1. [Push](https://docs.docker.com/engine/reference/commandline/push/) and store images in your private repository
-1. Deploy and [run](https://docs.docker.com/engine/reference/commandline/run/) images inside containers
+1. [Build](https://docs.docker.com/engine/reference/commandline/build/) your own custom Docker images using [VSTS Hosted Linux agent](https://docs.microsoft.com/en-us/vsts/build-release/concepts/agents/hosted)
+1. [Push](https://docs.docker.com/engine/reference/commandline/push/) and store the Docker images in your private repository
+1. Deploy and [run](https://docs.docker.com/engine/reference/commandline/run/) the images inside the Docker Containers
 
-Below screenshot helps you understand the VSTS DevOps workflow with Docker:
+The below diagram details the VSTS DevOps workflow with Docker:
 
-![](images/vstsdockerdevops.png)
+## Image to be added here
 
-## Pre-requisites
+## Prerequisites
 
-1. **Microsoft Azure Account**: You need a valid and active azure account for this lab.
+1. Valid and active **Microsoft Azure** account.
 
-1. You need a **Visual Studio Team Services Account** and [Personal Access Token](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate)
+1. Valid **VSTS** account. Create a new account from [here.](https://docs.microsoft.com/en-us/vsts/accounts/create-account-msa-or-work-student)
 
-1. You need to install **Docker Integration** extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.docker)
+1. [Personal Access Token](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate) (PAT)
+
+1. Installation of the **Docker Integration** extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.docker)
 
 ## Setting up the Environment
 
-We will create an **Azure Container Registry** (ACR) to store the images generated during VSTS build. These images contain environment configuration details with build settings.  An **Azure Web App** (with Linux OS) is created where custom built images will be deployed to run inside container (single container). **Azure SQL Database** along with **SQL Server** is created as a backend to **MyHealthClinic** .NetCore sample application.
-
-1. Click on **Deploy to Azure** (or right click and select ***Open in new tab***) to spin up **Azure Container Registry**, **Azure Web App** and **Azure SQL Database** along with **Azure SQL Server**. Enter required details such as Acr name, Site Name and DB Server Name. Agree to ***Terms and Conditions***, and click **Purchase**.
+1. Click on the **Deploy to Azure** button to initiate the configuration.
 
    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FVSTS-DevOps-Labs%2Fdocker%2Fdocker%2Ftemplates%2Fazuredeploy.json" target="_blank">
 
    ![](http://azuredeploy.net/deploybutton.png)</a>
 
-   Click [here](https://azure.microsoft.com/en-in/regions/services) to to see Azure products available by region.
+1. In the Custom deployment window, select the **Subscription** type, leave the default selection for the resource group and select the **Location**. Provide the **ACR Name, Site Name**, **DB Server Name**, accept the **Terms and Conditions** and click on the **Purchase** button to provision the following resources:
+   - Azure Container Registry
+   - Azure Web App
+   - Azure SQL Server Database
 
    >**Note**: Use small case letters for ***DB Server Name***.
 
@@ -128,11 +131,9 @@ Since the connections are not established during project provisioning, we will m
    |Tasks|Usage|
    |-----|-----|
    |![](images/icon.png) **Run services**| prepares suitable environment by restoring required packages|
-   |![](images/icon.png) **Build services**| builds images specified in a **docker-compose.yml** file with registry-qualified names and additional tags such as **$(Build.BuildId)**|
-   |![](images/icon.png) **Push services**| pushes images specified in a **docker-compose.yml** file, with multiple tags, to container registry|
-   |![](images/icon.png) **Lock services**| pulls image from default tag **latest** in container registry and verifies if uploaded image is up to date|
-   |![](images/icon.png) **Copy Files**| used to copy files from source to destination folder using match patterns|
-   |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| used to share the build artifacts|
+   |![](images/icon.png) **Build services**| builds **myhealth.web** image |
+   |![](images/icon.png) **Push services**| pushes **myhealth.web** image tagged with **$(Build.BuildId)** to container registry|
+      |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| used to share dacpac for database deployment through VSTS artifacts  |
 
 1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **Docker** and select **Tasks**.
 
@@ -145,7 +146,6 @@ Since the connections are not established during project provisioning, we will m
    |Phases|Usage|
    |------|-----|
    |**DB deployment**|**Hosted VS2017** agent is used to create database schema along with pre-configured data in **mhcdb**|
-   |**Agentless phase**| Manual intervention</b> is used to confirm if Azure Container Registry is manually mapped with Azure Web App|
    |**Web App deployment**|**Hosted Linux Preview** agent is used to pull image from ACR and deploy in Linux Web App|
 
 1. Under **Execute Azure SQL:DacpacTask**, update **Azure Subscription** from the dropdown.
@@ -156,7 +156,7 @@ Since the connections are not established during project provisioning, we will m
 
 1. Under **Azure App Service Deploy** task, update **Azure subscription** and **Azure Service name** with the endpoint components from the dropdown.
 
-    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. **Manual Intervention** step is used to confirm if Azure Container Registry is mapped with Azure Web App.
+    **Azure App Service Deploy** will pull the appropriate image corresponding to the BuildID from repository specified, and deploys the image to Linux App Service. 
 
     ![](images/updatedrd.png)
 
@@ -197,6 +197,8 @@ In this exercise, we will update the code to trigger CI-CD.
     ![](images/updatereg.png)
 
     ![](images/updatereg2.png)
+
+    We could configure Continuous Deployment to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a VSTS CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment
 
 1. To see generated images, go to your **Azure Container Registry** and navigate to **Repositories**.
 
