@@ -191,10 +191,8 @@ Since the connections are not established during project provisioning, let us ma
     |-----|-----|
     |![](images/icon.png) **Run services**| prepares suitable environment by restoring required packages|
     |![](images/icon.png) **Build services**| builds images specified in a **docker-compose.yml** file with registry-qualified names and additional tags such as **$(Build.BuildId)**|
-    |![](images/icon.png) **Push services**| pushes images specified in a **docker-compose.yml** file, with multiple tags, to container registry|
-    |![](images/icon.png) **Lock services**| pulls image from default tag **latest** in container registry and verifies if uploaded image is up to date|
-    |![](images/copy-files.png) **Copy Files**| used to copy files from source to destination folder using match patterns|
-    |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| used to share the build artifacts|
+    |![](images/icon.png) **Push services**| pushes images specified in a **docker-compose.yml** file, to container registry|
+    |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| publishes the myhealth.dacpac file to VSTS|
 
 
 1. Go to **Releases** under **Build & Release** tab, **Edit** the release definition **MyHealth.AKS.Release** and select **Tasks**.
