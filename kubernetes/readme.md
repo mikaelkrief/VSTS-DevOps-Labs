@@ -1,4 +1,4 @@
-# Docker Deployment to Kubernetes (AKS) using VSTS
+# Deploy application to AKS using Kubernetes
 
 ## Overview
 
