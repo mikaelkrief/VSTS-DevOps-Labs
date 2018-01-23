@@ -49,7 +49,7 @@ The below diagram details the VSTS DevOps workflow with Azure Container Service 
 
 ## Prerequisites
 
-1. **Microsoft Azure Account**: You need a valid and active azure account for the labs.
+1. **Microsoft Azure Account**: You need a valid and active azure account for the lab
 
 1. **Visual Studio Team Services Account**: If you don’t have one, you can create from [here](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate)
 
@@ -59,7 +59,7 @@ The below diagram details the VSTS DevOps workflow with Azure Container Service 
 
 ## Preparing user machine
 
-This lab requires executables to be installed and configured in **Administrator** mode on your machine. If you do not have administrative privileges on your machine, then create a Windows VM on Azure and make use of it for the rest of this lab. 
+This lab requires executables to be installed and configured in **Administrator** mode on your machine. If you do not have administrative privileges on your machine, create a Windows VM on Azure and follow the exercises within the VM. 
 
 1. Spin up a [Windows virtual machine on Azure](https://portal.azure.com/#create/Microsoft.WindowsServer2016Datacenter-ARM).
 
@@ -122,7 +122,7 @@ We require below azure resources for this lab:
    ![](http://azuredeploy.net/deploybutton.png)</a>
 
    **Note**: 
-   > Since the Azure SQL Server name does not support **UPPER** case letter in its naming convention, use lower case for ***DB Server Name*** field value.
+   > Since the Azure SQL Server name does not support **UPPER** / **Camel** casing for its naming convention, use lower case for ***DB Server Name*** field value.
 
    > At the time of writing this lab, regions **East US**, **Central US**, **West Europe**, **Canada Central** and **Canada East** are supported locations. For more information, refer [AKS Azure Regions](https://docs.microsoft.com/en-in/azure/aks/container-service-quotas).
 
@@ -133,7 +133,7 @@ We require below azure resources for this lab:
 
    ![](images/deploymentsucceeded.png)
 
-1. The components - a **Storage account**, a **Container Registry**, a **Container Service**, a **SQL Server** along with a **SQL Database**. Let us access each of these components and gather their details which are required for Exercise 2.
+1. The components - a **Storage account**, a **Container Registry**, a **Container Service**, a **SQL Server** along with a **SQL Database**. Let us access each of these components and gather their details which are required in Exercise 2.
 
    ![](images/azurecomponents.png)
 
@@ -170,37 +170,40 @@ We require below azure resources for this lab:
 
 Service endpoints are a bundle of properties securely stored by VSTS and is a way for VSTS to connect to external systems or services. 
 
-Since the connections are not established during project provisioning, let us manually create the Azure and Kubernetes endpoints. 2 endpoints -  *Azure Resource Manager* and *Kubernetes* service endpoints are used in this lab.
+Since the connections are not established during project provisioning, let us manually create 2 endpoints -  **Azure Resource Manager** and **Kubernetes**.
 
 **Azure Resource Manager Service Endpoint** : Defines and secures a connection to a Microsoft Azure subscription using Service Principal Authentication (SPA). 
 
 1. In VSTS, navigate to the **Services** by clicking on the gear icon ![](images/gear.png), and click on the **+ New Service Endpoint**. Select **Azure Resource Manager**. Specify the **Connection name**, select your **Subscription** from the dropdown and click **OK**. We use this endpoint to connect **VSTS** and **Azure**.
 
+    You will be prompted to authorize this connection with Azure credentials. Disable pop-up blocker in your browser if you see a blank screen after clicking OK, and retry the step.
+
 > If your subscription is not listed or to specify an existing service principal, click the link in the dialog which will switch to manual configuration mode and follow the  [Service Principal creation](https://blogs.msdn.microsoft.com/devops/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-buildrelease-management/) link.
 
    ![](images/azureendpoint.png)
 
-    You will be prompted to authorize this connection with Azure credentials. Disable pop-up blocker in your browser if you see a blank screen after clicking OK, and retry the step.
 
 **Kubernetes Service Endpoint**
 
 1. Click **+ New Service Endpoint**, and select **Kubernetes** from the list. We use this endpoint to connect **VSTS** and **Azure Container Service (AKS)**.
 
-    - For the **Server URL**, enter your container service **API server address** pre-fixed with **http://**
+    - **Connection Name** : Provide the connection name.
 
-    - To get **Kubeconfig** contents, run the following Azure commands in a command prompt logged in with Administrator privilege.
+    - **Server URL** : Enter your container service **API server address** pre-fixed with **http://**
 
-      - **az login** : Authorize your login by going to below url, and enter the provided unique code.
+    - **Kubeconfig** : To get the Kubeconfig value, run the following Azure commands in a command prompt logged in with Administrator privilege.
+
+      1. Type **az login** and hit Enter. Authorize your login by accessing the url given in the prompt and enter the provided unique code to complete the authentication.
 
       ![](images/azlogin.png)
 
-      - **az aks get-credentials --resource-group yourResourceGroup --name yourAKSname** : Get access credentials for the Kubernetes cluster.
+      2. **az aks get-credentials --resource-group yourResourceGroup --name yourAKSname** : Get access credentials for the Kubernetes cluster.
 
       ![](images/getkubeconfig.png)
 
     - Navigate to the **.kube** folder under your home directory (eg: C:\Users\YOUR_HOMEDIR\ .kube)
 
-    - Copy contents from configuration file called **config** and paste it in the Kubernetes Connection window. Click **OK**.
+    - Copy contents of the **config** file and paste it in the Kubernetes Connection window. Click **OK**.
 
       ![](images/aksendpoint.png)
 
@@ -278,7 +281,7 @@ We will update the database connection string for the .NET Core application and 
 
 ## Exercise 4: Trigger a Build and deploy application
 
-In this exercise, let us trigger a build manually which in turn will trigger an automatic deployment of the application. Our application is designed to be deployed in the pod with **load balancer** in front-end and **Redis cache** in the back-end.
+In this exercise, let us trigger a build manually and upon completion,an automatic deployment of the application will be triggered. Our application is designed to be deployed in the pod with **load balancer** in front-end and **Redis cache** in the back-end.
 
 1. Go to the **Builds** section under the **Build and Release** menu, click the build definition **MyHealth.AKS.Build** and then click **Queue new build...**.
 
