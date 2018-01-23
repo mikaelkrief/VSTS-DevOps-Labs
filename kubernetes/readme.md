@@ -8,21 +8,21 @@ This lab shows how to build a Docker based ASP.NET Core web application and depl
 
 Below are the description for the terminologies used in the lab document to help you get started:
 
-[**Kubernetes**](): Kubernetes is an open source system for managing containerized applications across multiple hosts, providing basic mechanisms for deployment, maintenance, and scaling of applications.
+[**Docker**](https://www.docker.com/): Docker is a tool that allows to easily deploy applications in a sandbox (called containers) to run on Linux.
 
-[**Images**](): 
+[**Images**](https://docs.docker.com/engine/docker-overview/#docker-objects): An image is a read-only template with instructions needed to make the application run.
 
-[**Docker**](): Docker is a tool that allows to easily deploy applications in a sandbox (called containers) to run on Linux. 
+[**Containers**](https://docs.docker.com/engine/docker-overview/#docker-objects): Provides an isolated environment in which an app along with its environment, is run.
 
-[**Containers**](): 
+[**Kubernetes**](https://kubernetes.io/): Kubernetes is an open source system for managing containerized applications across multiple hosts, providing basic mechanisms for deployment, maintenance, and scaling of applications.
 
-[**Pods**](https://kubernetes.io/docs/concepts/workloads/pods/pod/): A Pod is the basic building block of Kubernetes–the smallest and simplest unit in the Kubernetes object model that you create or deploy. A Pod represents a running process on your cluster.
+[**Pods**](https://kubernetes.io/docs/concepts/workloads/pods/pod/): A Pod is the basic building block of Kubernetes and represents a executable unit of work. A Pod usually contains a single container.
 
-[**Services**](https://kubernetes.io/docs/concepts/services-networking/service/): A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them - sometimes called a micro-service.
+[**Services**](https://kubernetes.io/docs/concepts/services-networking/service/): A service tells other pods what services your application provides.
 
 [**Deployments**](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/): A Deployment controller provides declarative updates for Pods
 
-[**Kubernetes Manifest file**](https://kubernetes.io/docs/reference/kubectl/cheatsheet/): Kubernetes manifests with deployments, services and pods can be defined in json or yaml. The file extension .yaml, .yml, and .json can be used.
+[**Kubernetes Manifest file**](https://kubernetes.io/docs/reference/kubectl/cheatsheet/): Kubernetes manifests with deployments, services and pods can be defined in json or yaml. The file extensions .yaml, .yml, and .json can be used.
 
 
 In this lab, you will perform the following:
@@ -74,7 +74,7 @@ This lab requires executables to be installed and configured in **Administrator*
     2. Provide the following values - 
         - **File path** : Path to which the generated key file should be saved. Leave it blank to save the file to default path.
         - **Passphrase** : Provide a passphrase or leave it blank for an empty passphrase.
-    3. The keys are generated.The contents of the public key **id_rsa.pub** is required for setting up environment which are of format 
+    3. Access the path where the keys are generated. The contents of the public key **id_rsa.pub** is required for setting up environment which are of format 
 
 1. You need [Azure Service Principal Client ID and Client Secret](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal) for the next exercise.
 
@@ -121,7 +121,10 @@ We require below azure resources for this lab:
 
    ![](http://azuredeploy.net/deploybutton.png)</a>
 
-   **Note**: Since the Azure SQL Server name does not support **UPPER** case letter in its naming convention, use lower case for ***DB Server Name*** field value.
+   **Note**: 
+   > Since the Azure SQL Server name does not support **UPPER** case letter in its naming convention, use lower case for ***DB Server Name*** field value.
+
+   > At the time of writing this lab, regions **East US**, **Central US**, **West Europe**, **Canada Central** and **Canada East** are supported locations. For more information, refer [AKS Azure Regions](https://docs.microsoft.com/en-in/azure/aks/container-service-quotas).
 
    ![](images/customtemplate1.png)
    ![](images/customtemplate2.png)
@@ -130,19 +133,19 @@ We require below azure resources for this lab:
 
    ![](images/deploymentsucceeded.png)
 
-1. Below components are created after deployment.
+1. The components - a **Storage account**, a **Container Registry**, a **Container Service**, a **SQL Server** along with a **SQL Database**. Let us access each of these components and gather their details which are required for Exercise 2.
 
    ![](images/azurecomponents.png)
 
-1. Click on **mhcdb** SQL database. Note down the **Server name**.
+1. Click on **mhcdb** SQL database and note down the **Server name** .
 
    ![](images/getdbserverurl.png)
 
-1. Go back to the resource group, click on container registry and note down the **Login server** name.
+1. Go back to the resource group, click on the created container registry and note down the **Login server** name.
 
     ![](images/getacrserver.png)
 
-1. Switch back to the resource group. Click on your container service and note down the **API server address**. We need these details later in Exercise 2.
+1. Switch back to the resource group. Click on your container service and note down the **API server address**. 
 
    ![](images/getaksserver.png)
 
@@ -150,11 +153,12 @@ We require below azure resources for this lab:
 
 ## Setting up the VSTS Project
 
-1. Use [VSTS Demo Generator](https://vstsdemogenerator.azurewebsites.net/?TemplateId=77372&name=AKS) to provision the project on your VSTS account.
+1. Use [VSTS Demo Generator](https://vstsdemogenerator.azurewebsites.net/?TemplateId=77372&name=AKS) to provision the project on your VSTS account. The VSTS Demo Generator creates a Kubernetes project in your VSTS account with preset source code, work items, build and release definitions. 
+
 
     ![](images/vstsdg.png)
 
-1. Provide the Project Name, and click on Create Project.
+1. Provide the Project Name, and click on the **Create Project** button.
 
    ![](images/vstsdemogen2.png)
 
@@ -162,23 +166,31 @@ We require below azure resources for this lab:
 
    ![](images/vstsdemogen3.png) 
 
-## Exercise 1: Endpoint Creation
+## Exercise 1: Service Endpoint creation
 
-Since the connections are not established during project provisioning, let us manually create the Azure and Kubernetes endpoints.
+Service endpoints are a bundle of properties securely stored by VSTS and is a way for VSTS to connect to external systems or services. 
+
+Since the connections are not established during project provisioning, let us manually create the Azure and Kubernetes endpoints. 2 endpoints -  *Azure Resource Manager* and *Kubernetes* service endpoints are used in this lab.
+
+**Azure Resource Manager Service Endpoint** : Defines and secures a connection to a Microsoft Azure subscription using Service Principal Authentication (SPA). 
 
 1. In VSTS, navigate to **Services** by clicking on the gear icon ![](images/gear.png), and click on **+ New Service Endpoint**. Select **Azure Resource Manager**. Specify **Connection name**, select your **Subscription** from the dropdown and click **OK**. We use this endpoint to connect **VSTS** and **Azure**.
+
+> If your subscription is not listed or to specify an existing service principal, click the link in the dialog,which will switch to manual entry mode and follow the  [Service Principal creation](https://blogs.msdn.microsoft.com/devops/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-buildrelease-management/) link.
 
    ![](images/azureendpoint.png)
 
     You will be prompted to authorize this connection with Azure credentials. Disable pop-up blocker in your browser if you see a blank screen after clicking OK, and retry the step.
 
+**Kubernetes Service Endpoint**
+
 1. Click **+ New Service Endpoint**, and select **Kubernetes** from the list. We use this endpoint to connect **VSTS** and **Azure Container Service (AKS)**.
 
-    For **Server URL**, enter your container service **API server address** pre-fixed with **http://**
+    - For **Server URL**, enter your container service **API server address** pre-fixed with **http://**
 
-    To get **Kubeconfig** contents, run these commands from your Azure CLI.
+    - To get **Kubeconfig** contents, run these commands from your Azure CLI.
 
-    - **az login**
+      - **az login**
 
       Authorize your login by going to below url, and enter the provided unique code.
 
