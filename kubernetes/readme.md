@@ -223,16 +223,17 @@ Since the connections are not established during project provisioning, let us ma
 
     |Tasks|Usage|
     |-----|-----|
+    |![](images/icon.png) **Run services**| prepares suitable environment by restoring required packages|
     |![](images/icon.png) **Build services**| builds images specified in a **docker-compose.yml** file with registry-qualified names and additional tags such as **$(Build.BuildId)**|
     |![](images/icon.png) **Push services**| pushes images specified in a **docker-compose.yml** file, to container registry|
-    |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| publishes the myhealth.dacpac file to VSTS|
+    |![](images/publish-build-artifacts.png) **Publish Build Artifacts**| publishes the **myhealth.dacpac** file to VSTS|
 
 
 1. Navigate to the **Releases** section under the **Build & Release** menu, **Edit** the release definition **MyHealth.AKS.Release** and select **Tasks**.
 
    ![](images/release.png) 
 
-   ![](images/releasetasks.png) 
+   ![](images/releasetasks.png)
 
 1. In the **Dev** environment, under the **DB deployment** phase, update the **Azure Subscription** value from the dropdown for **Execute Azure SQL: DacpacTask** task.
 
