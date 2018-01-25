@@ -63,6 +63,10 @@ This lab requires executables to be installed and configured in **Administrator*
 
 1. Spin up a [Windows virtual machine on Azure](https://portal.azure.com/#create/Microsoft.WindowsServer2016Datacenter-ARM).
 
+1. Disable <a href="https://support.microsoft.com/en-in/help/815141/internet-explorer-enhanced-security-configuration-changes-the-browsing">Internet Explorer Enhanced Configuration</a> to allow download of the below tools.
+
+1. Enable <a href="https://support.microsoft.com/en-in/help/3135465/how-to-enable-javascript-in-windows">JavaScript</a> to allow lab required specific features on the webpage. 
+
 1. Download and install  [Git Bash](https://git-scm.com/downloads) in the Azure VM.
 
 1. Install [Azure CLI version 2.0.23](https://azurecliprod.blob.core.windows.net/msi/azure-cli-2.0.23.msi) on the Azure VM. This is the **Azure Command Line Interface** tool required to authenticate to your Azure subscription and fetch the Azure resource group details required later in Exercise 2.
